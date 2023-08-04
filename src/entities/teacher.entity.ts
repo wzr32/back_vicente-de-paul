@@ -17,14 +17,17 @@ export class Teacher extends BaseEntity {
   @Column({ nullable: false, name: "first_name" })
   firstName: string;
 
-  @Column({ nullable: true, name: "middle_name" })
+  @Column({ name: "middle_name" })
   middleName: string;
 
   @Column({ nullable: false, name: "first_lastname" })
   firstLastName: string;
 
-  @Column({ nullable: true, name: "second_last_name" })
+  @Column({ name: "second_last_name" })
   secondLastName: string;
+
+  @Column({ unique: true, nullable: false })
+  email: string;
 
   @CreateDateColumn({
     name: "created_at",

@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Student } from "./student.entity";
 
 @Entity({ name: "representants" })
 export class Representant extends BaseEntity {
@@ -14,16 +16,19 @@ export class Representant extends BaseEntity {
   @Column({ unique: true, nullable: false })
   dni: string;
 
+  @Column({ unique: true, nullable: false })
+  email: string;
+
   @Column({ nullable: false, name: "first_name" })
   firstName: string;
 
-  @Column({ nullable: true, name: "middle_name" })
+  @Column({ name: "middle_name" })
   middleName: string;
 
   @Column({ nullable: false, name: "first_lastname" })
   firstLastName: string;
 
-  @Column({ nullable: true, name: "second_last_name" })
+  @Column({ name: "second_last_name" })
   secondLastName: string;
 
   @CreateDateColumn({
@@ -32,4 +37,7 @@ export class Representant extends BaseEntity {
     nullable: false,
   })
   createdAt: Date;
+
+  @OneToMany(() => Student, (student) => student.representant)
+  students: Student[];
 }

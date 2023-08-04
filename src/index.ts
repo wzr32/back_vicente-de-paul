@@ -5,6 +5,7 @@ import { AppDataSource } from "./database";
 (async () => {
   try {
     await AppDataSource.initialize();
+    await AppDataSource.runMigrations();
     console.log(Colors.green("Database connected"));
     app.listen(PORT, () => {
       console.log(Colors.green(`Server on port ${PORT}`));

@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -16,26 +17,23 @@ export class Student extends BaseEntity {
   @Column({ unique: true, nullable: false })
   dni: string;
 
-  @Column({ nullable: false, name: "representant_id" })
-  representantId: number;
-
   @Column({ nullable: false, name: "first_name" })
   firstName: string;
 
-  @Column({ nullable: true, name: "middle_name" })
+  @Column({ name: "middle_name" })
   middleName: string;
 
   @Column({ nullable: false, name: "first_lastname" })
   firstLastName: string;
 
-  @Column({ nullable: true, name: "second_last_name" })
+  @Column({ name: "second_last_name" })
   secondLastName: string;
 
   @Column({ nullable: false })
-  birthdate: Date;
+  birthdate: string;
 
   @Column({ nullable: true, name: "birth_country" })
-  birthCountry: number;
+  birthCountry: string;
 
   @CreateDateColumn({
     name: "created_at",
@@ -45,5 +43,6 @@ export class Student extends BaseEntity {
   createdAt: Date;
 
   @ManyToOne(() => Representant)
+  @JoinColumn({ name: "representant_id" })
   representant: Representant;
 }
