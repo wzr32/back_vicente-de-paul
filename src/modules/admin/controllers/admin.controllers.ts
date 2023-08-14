@@ -51,7 +51,7 @@ export const createStudent = async (
         secondLastName: representant.secondLastName,
       });
 
-      await RepresentantRepo.save(newRepresentant);
+      await RepresentantRepo.insert(newRepresentant);
       createdRepresentant = newRepresentant;
     } else {
       createdRepresentant = checkRepresentant;
@@ -79,7 +79,7 @@ export const createStudent = async (
     });
 
     await UserRepo.save(newUser);
-    await StudentRepo.save(newStudent);
+    await StudentRepo.insert(newStudent);
     res.status(201).json({ msg: "Estudiante creado!", student: newStudent });
   } catch (error) {
     res.status(400).json({ error: "error creando estudiante" });
