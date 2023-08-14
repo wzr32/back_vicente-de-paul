@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Course, Period, Student, Teacher } from ".";
+import { Section } from "./section.entity";
 
 @Entity({ name: "pensum" })
 export class Pensum extends BaseEntity {
@@ -39,4 +40,8 @@ export class Pensum extends BaseEntity {
 
   @ManyToOne(() => Course)
   course: Course;
+
+  @ManyToOne(() => Section)
+  @JoinColumn({ name: "section_id" })
+  section: Section;
 }

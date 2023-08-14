@@ -3,11 +3,13 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Teacher } from "./teacher.entity";
 import { Student } from "./student.entity";
 import { Course } from "./course.entity";
+import { Section } from "./section.entity";
 
 @Entity({ name: "periods" })
 export class Period extends BaseEntity {
@@ -37,4 +39,7 @@ export class Period extends BaseEntity {
 
   @ManyToOne(() => Course)
   course: Course;
+
+  @OneToMany(() => Section, (section) => section.id)
+  sections: Section[];
 }
