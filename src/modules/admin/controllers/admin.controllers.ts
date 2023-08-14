@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { EntityNotFoundError } from "typeorm";
 import {
   Course as CourseRepo,
   Pensum as PensumRepo,
@@ -19,6 +20,8 @@ import {
 } from "../../students/types";
 import { hashPass } from "../../../utilities/bcrypt.utility";
 
+// CREATE
+
 export const createStudent = async (
   req: Request<
     {},
@@ -35,7 +38,11 @@ export const createStudent = async (
       where: { dni: student.dni },
     });
 
-    if (checkStudent) res.status(409).json({ error: "Estudiante ya existe" });
+    console.log("checkStudent =>> ", checkStudent);
+
+    if (checkStudent)
+      return res.status(409).json({ error: "Estudiante ya existe" });
+    console.log("after check student");
 
     const checkRepresentant = await RepresentantRepo.findOne({
       where: { dni: representant.dni },
@@ -68,17 +75,6 @@ export const createStudent = async (
       representant: createdRepresentant!!,
     });
 
-    const role = await RoleRepo.findOne({ where: { role_name: "student" } });
-
-    if (!role) res.status(500).json({ error: "Ocurrio un error" });
-
-    const newUser = UserRepo.create({
-      email: createdRepresentant!!.email,
-      password: hashPass(createdRepresentant!!.dni),
-      role: role!!,
-    });
-
-    await UserRepo.save(newUser);
     await StudentRepo.insert(newStudent);
     res.status(201).json({ msg: "Estudiante creado!", student: newStudent });
   } catch (error) {
@@ -90,7 +86,7 @@ export const createStudent = async (
 export const createTeacher = async (
   req: Request<{}, {}, { teacher: TeacherData }>,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   const { teacher } = req.body;
 
   try {
@@ -98,7 +94,8 @@ export const createTeacher = async (
       where: { dni: teacher.dni },
     });
 
-    if (checkTeacher) res.status(409).json({ error: "Profesor ya existe" });
+    if (checkTeacher)
+      return res.status(409).json({ error: "Profesor ya existe" });
 
     const newTeacher = TeacherRepo.create({
       dni: teacher.dni,
@@ -111,7 +108,7 @@ export const createTeacher = async (
 
     const role = await RoleRepo.findOne({ where: { role_name: "teacher" } });
 
-    if (!role) res.status(500).json({ error: "Ocurrio un error" });
+    if (!role) return res.status(500).json({ error: "Ocurrio un error" });
 
     const newUser = UserRepo.create({
       email: newTeacher!!.email,
@@ -119,8 +116,8 @@ export const createTeacher = async (
       role: role!!,
     });
 
-    await TeacherRepo.save(newTeacher);
-    await UserRepo.save(newUser);
+    await TeacherRepo.insert(newTeacher);
+    await UserRepo.insert(newUser);
 
     res.status(201).json({ msg: "Profesor creado!", teacher: newTeacher });
   } catch (error) {
@@ -243,5 +240,78 @@ export const createPeriod = async (
   } catch (error) {
     res.status(400).json({ error: "error creando curso" });
     console.log("error creating period =>> ", error);
+  }
+};
+
+// READ
+
+export const getStudent = async (
+  req: Request<{}, {}, { id: number }>,
+  res: Response
+): Promise<any> => {
+  const { id } = req.body;
+  try {
+    const student = await StudentRepo.findOneBy({ id });
+    res.status(200).json(student);
+  } catch (error) {
+    if (error instanceof EntityNotFoundError) {
+      res.status(404).json({ error: "Estudiante no existe" });
+    }
+    res.status(400).json({ error: "error obteniendo estudiante" });
+    console.log("error getting student =>> ", error);
+  }
+};
+export const getAllStudents = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const students = await StudentRepo.find();
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo estudiantes" });
+    console.log("error getting students =>> ", error);
+  }
+};
+
+export const getTeacher = async (
+  req: Request<{}, {}, { id: number }>,
+  res: Response
+): Promise<any> => {
+  const { id } = req.body;
+  try {
+    const teacher = await TeacherRepo.findOneBy({ id });
+    res.status(200).json(teacher);
+  } catch (error) {
+    if (error instanceof EntityNotFoundError) {
+      res.status(404).json({ error: "Profesor no existe" });
+    }
+    res.status(400).json({ error: "Error obteniendo profesor" });
+    console.log("error getting teacher =>> ", error);
+  }
+};
+export const getAllTeachers = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const teachers = await TeacherRepo.find();
+    res.status(200).json(teachers);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo profesores" });
+    console.log("error getting teachers =>> ", error);
+  }
+};
+
+export const getAllCourses = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const courses = await CourseRepo.find();
+    res.status(200).json({ courses });
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo materias" });
+    console.log("error getting courses =>> ", error);
   }
 };
