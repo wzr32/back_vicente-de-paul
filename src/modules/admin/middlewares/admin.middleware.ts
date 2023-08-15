@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import { Role, User } from "../../../entities";
+import { User } from "../../../entities";
 import * as jwt from "jsonwebtoken";
 
 export async function checkIsAdmin(
@@ -21,9 +21,9 @@ export async function checkIsAdmin(
   const user = await User.findOne({ where: {} });
 
   // Verificar rol
-  if (Number(user?.role.id) === 1) {
-    return res.status(403).send("Unauthorized");
-  }
+  // if (Number(user?.role.id) === 1) {
+  //   return res.status(403).send("Unauthorized");
+  // }
 
   next();
 }
