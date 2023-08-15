@@ -6,6 +6,7 @@ import {
   getAllTeachers,
   getStudent,
   getTeacher,
+  getAllUsers,
 } from "../controllers";
 
 const router = Router();
@@ -18,6 +19,7 @@ router
   .get("/get-students", getAllStudents)
   .get("/get-teacher/:id", getTeacher)
   .get("/get-teachers", getAllTeachers)
+  .get("/get-users", getAllUsers)
   .post("/create-student", createStudent)
   .post("/create-teacher", createTeacher);
 

@@ -2,7 +2,6 @@ import { Role as RoleRepo, User as UserRepo } from "../entities";
 import { hashPass } from "../utilities/bcrypt.utility";
 
 export const createInitialData = async () => {
-  console.log(hashPass("admin123."));
   const role1 = await RoleRepo.findOne({ where: { role_name: "admin" } });
   const role2 = await RoleRepo.findOne({ where: { role_name: "teacher" } });
   const role3 = await RoleRepo.findOne({ where: { role_name: "student" } });

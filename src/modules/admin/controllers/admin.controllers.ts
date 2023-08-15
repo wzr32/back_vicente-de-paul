@@ -56,6 +56,8 @@ export const createStudent = async (
         middleName: representant.middleName,
         firstLastName: representant.firstLastName,
         secondLastName: representant.secondLastName,
+        phone: representant.phone,
+        optionalPhone: representant.optionalPhone,
       });
 
       await RepresentantRepo.insert(newRepresentant);
@@ -65,7 +67,7 @@ export const createStudent = async (
     }
 
     const newStudent = StudentRepo.create({
-      birthCountry: student.birthCountry,
+      address: student.address,
       birthdate: student.birthdate,
       dni: student.dni,
       firstName: student.firstName,
@@ -155,39 +157,43 @@ export const createCourse = async (
 export const createPensum = async (
   req: Request<{}, {}, { pensum: PensumData }>,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   const { pensum } = req.body;
 
   try {
     const checkTeacher = await TeacherRepo.findOne({
-      where: { id: pensum.teacherId },
+      where: { id: pensum.teacher.id },
     });
     if (!checkTeacher)
-      res.status(404).json({ error: "No se encuentra el profesor asignado" });
+      return res
+        .status(404)
+        .json({ error: "No se encuentra el profesor asignado" });
 
-    const checkstudent = await TeacherRepo.findOne({
-      where: { id: pensum.studentId },
+    const checkstudent = await StudentRepo.findOne({
+      where: { id: pensum.student.id },
     });
     if (!checkstudent)
-      res.status(404).json({ error: "No se encuentra el estudiante asignado" });
+      return res
+        .status(404)
+        .json({ error: "No se encuentra el estudiante asignado" });
 
-    const checkPeriod = await TeacherRepo.findOne({
-      where: { id: pensum.periodId },
+    const checkPeriod = await PeriodRepo.findOne({
+      where: { id: pensum.period.id },
     });
     if (!checkPeriod)
-      res.status(404).json({ error: "No se encuentra el periodo asignado" });
+      return res
+        .status(404)
+        .json({ error: "No se encuentra el periodo asignado" });
 
-    const checkCourse = await TeacherRepo.findOne({
-      where: { id: pensum.courseId },
+    const checkCourse = await CourseRepo.findOne({
+      where: { id: pensum.course.id },
     });
     if (!checkCourse)
-      res.status(404).json({ error: "No se encuentra el curso asignado" });
+      return res
+        .status(404)
+        .json({ error: "No se encuentra el curso asignado" });
 
     const newPensum = PensumRepo.create({
-      teacherId: checkTeacher?.id,
-      studentId: checkstudent?.id,
-      periodId: checkPeriod?.id,
-      courseId: checkCourse?.id,
       teacher: checkTeacher!!,
       student: checkstudent!!,
       period: checkPeriod!!,
@@ -251,7 +257,10 @@ export const getStudent = async (
 ): Promise<any> => {
   const { id } = req.body;
   try {
-    const student = await StudentRepo.findOneBy({ id });
+    const student = await StudentRepo.findOne({
+      where: { id },
+      relations: ["representant"],
+    });
     res.status(200).json(student);
   } catch (error) {
     if (error instanceof EntityNotFoundError) {
@@ -313,5 +322,20 @@ export const getAllCourses = async (
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo materias" });
     console.log("error getting courses =>> ", error);
+  }
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UserRepo.find({ relations: ["role"] });
+
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+
+    res.status(200).json(usersWithoutPassword);
+  } catch (error) {
+    res.status(404).json({ error: "Error obteniendo usuarios" });
   }
 };

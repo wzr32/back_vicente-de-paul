@@ -31,6 +31,12 @@ export class Representant extends BaseEntity {
   @Column({ name: "second_last_name" })
   secondLastName: string;
 
+  @Column()
+  phone: string;
+
+  @Column({ name: "optional_phone" })
+  optionalPhone: string;
+
   @CreateDateColumn({
     name: "created_at",
     default: () => "timezone('America/Caracas', now())",

@@ -17,7 +17,10 @@ export class Section {
   @Column()
   name: string;
 
-  @ManyToOne(() => Period, (period) => period.id)
+  @ManyToOne(() => Period)
   @JoinColumn({ name: "period_id" })
   period: Period;
+
+  @Column({ type: "timestamptz" })
+  created_at: Date;
 }
