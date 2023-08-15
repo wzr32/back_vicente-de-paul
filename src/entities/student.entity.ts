@@ -32,8 +32,8 @@ export class Student extends BaseEntity {
   @Column({ nullable: false })
   birthdate: string;
 
-  @Column({ nullable: true, name: "birth_country" })
-  birthCountry: string;
+  @Column({ nullable: false, name: "address" })
+  address: string;
 
   @CreateDateColumn({
     name: "created_at",

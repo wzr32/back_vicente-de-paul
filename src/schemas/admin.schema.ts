@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const studentSchema = z.object({
-  birthCountry: z.string().nonempty().trim(),
   birthdate: z.string().nonempty().trim(),
   dni: z.string().nonempty().trim(),
   firstName: z.string().nonempty().trim(),

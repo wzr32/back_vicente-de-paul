@@ -40,6 +40,24 @@ export class Period extends BaseEntity {
   @ManyToOne(() => Course)
   course: Course;
 
-  @OneToMany(() => Section, (section) => section.id)
+  @Column({ type: "timestamptz" })
+  start_date_lap1: Date;
+
+  @Column({ type: "timestamptz" })
+  end_date_lap1: Date;
+
+  @Column({ type: "timestamptz" })
+  start_date_lap2: Date;
+
+  @Column({ type: "timestamptz" })
+  end_date_lap2: Date;
+
+  @Column({ type: "timestamptz" })
+  start_date_lap3: Date;
+
+  @Column({ type: "timestamptz" })
+  end_date_lap3: Date;
+
+  @OneToMany(() => Section, (section) => section.period)
   sections: Section[];
 }

@@ -7,41 +7,34 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Course, Period, Student, Teacher } from ".";
-import { Section } from "./section.entity";
 
 @Entity({ name: "pensum" })
 export class Pensum extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false, name: "teacher_id" })
-  teacherId: number;
-
-  @Column({ nullable: false, name: "student_id" })
-  studentId: number;
-
-  @Column({ nullable: false, name: "period_id" })
-  periodId: number;
-
-  @Column({ nullable: false, name: "course_id" })
-  courseId: number;
-
-  @Column({ nullable: true })
-  grade: number;
-
   @ManyToOne(() => Teacher)
+  @JoinColumn({ name: "teacher_id" })
   teacher: Teacher;
 
   @ManyToOne(() => Student)
+  @JoinColumn({ name: "student_id" })
   student: Student;
 
   @ManyToOne(() => Period)
+  @JoinColumn({ name: "period_id" })
   period: Period;
 
   @ManyToOne(() => Course)
+  @JoinColumn({ name: "course_id" })
   course: Course;
 
-  @ManyToOne(() => Section)
-  @JoinColumn({ name: "section_id" })
-  section: Section;
+  @Column({ type: "integer" })
+  grade_lap1: number;
+
+  @Column({ type: "integer" })
+  grade_lap2: number;
+
+  @Column({ type: "integer" })
+  grade_lap3: number;
 }
