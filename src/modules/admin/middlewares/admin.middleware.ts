@@ -21,9 +21,9 @@ export async function checkIsAdmin(
   const user = await User.findOne({ where: {} });
 
   // Verificar rol
-  if (Number(user?.role.id) === 1) {
-    return res.status(403).send("Unauthorized");
-  }
+  // if (Number(user?.role.id) === 1) {
+  //   return res.status(403).send("Unauthorized");
+  // }
 
   next();
 }
