@@ -35,10 +35,10 @@ export const AppDataSource = new DataSource({
   subscribers: [],
   migrations: ["./src/migrations"],
   migrationsTableName: "migration_table",
-  ssl: true, // Habilita la conexión SSL/TLS
-  extra: {
-    ssl: {
-      rejectUnauthorized: false, // Esto puede ser necesario en algunos casos, aunque no es recomendado para producción
-    },
-  },
+  // ssl: true, // Habilita la conexión SSL/TLS
+  // extra: {
+  //   ssl: {
+  //     rejectUnauthorized: false, // Esto puede ser necesario en algunos casos, aunque no es recomendado para producción
+  //   },
+  // },
 });

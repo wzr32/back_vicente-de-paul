@@ -131,15 +131,18 @@ export const createTeacher = async (
 export const createCourse = async (
   req: Request<{}, {}, { course: Omit<CourseData, "id"> }>,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   const { course } = req.body;
 
   try {
     const checkCourse = await CourseRepo.findOne({
       where: { name: course.name },
     });
-    if (checkCourse)
-      res.status(409).json({ msg: "Ya existe un curso con este nombre" });
+    if (checkCourse) {
+      return res
+        .status(409)
+        .json({ error: "Ya existe una materia con este nombre" });
+    }
 
     const newCourse = CourseRepo.create({
       name: course.name,
@@ -147,9 +150,9 @@ export const createCourse = async (
 
     await CourseRepo.save(newCourse);
 
-    res.status(201).json({ msg: "Curso creado!" });
+    res.status(201).json({ msg: "Materia creado!" });
   } catch (error) {
-    res.status(400).json({ error: "error creando curso" });
+    res.status(400).json({ error: "error creando materia" });
     console.log("error creating course =>> ", error);
   }
 };
@@ -318,7 +321,7 @@ export const getAllCourses = async (
 ): Promise<any> => {
   try {
     const courses = await CourseRepo.find();
-    res.status(200).json({ courses });
+    res.status(200).json(courses);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo materias" });
     console.log("error getting courses =>> ", error);
@@ -339,3 +342,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     res.status(404).json({ error: "Error obteniendo usuarios" });
   }
 };
+
+// UPDATE
+
+// DELETE

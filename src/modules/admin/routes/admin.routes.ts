@@ -7,6 +7,8 @@ import {
   getStudent,
   getTeacher,
   getAllUsers,
+  createCourse,
+  getAllCourses,
 } from "../controllers";
 
 const router = Router();
@@ -20,7 +22,9 @@ router
   .get("/get-teacher/:id", getTeacher)
   .get("/get-teachers", getAllTeachers)
   .get("/get-users", getAllUsers)
+  .get("/get-courses", getAllCourses)
   .post("/create-student", createStudent)
-  .post("/create-teacher", createTeacher);
+  .post("/create-teacher", createTeacher)
+  .post("/create-course", createCourse);
 
 export default router;

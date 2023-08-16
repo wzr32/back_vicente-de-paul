@@ -76,10 +76,11 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { id, email, password } = req.body;
+  const { id } = req.params;
+  const { password } = req.body;
 
   try {
-    const checkUser = await UserRepo.findOne({ where: { id } });
+    const checkUser = await UserRepo.findOne({ where: { id: Number(id) } });
 
     if (!checkUser) {
       return res.status(404).json({ error: "Usuario no encontrado" });
@@ -88,32 +89,32 @@ export const updateUser = async (req: Request, res: Response) => {
     const hashedPass = hashPass(password);
 
     const user = {
-      email,
       password: hashedPass,
       role: checkUser.role,
     };
 
-    await UserRepo.update({ id }, user);
+    await UserRepo.update({ id: Number(id) }, user);
 
-    res.status(201).json({ msg: "Actualizacion realizada!" });
+    res.status(200).json({ msg: "Actualizacion realizada!" });
   } catch (error) {
+    console.log("update user error => ", error);
     res.status(404).json({ error: "Error actualizando usuario" });
   }
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
-    const checkUser = await UserRepo.findOne({ where: { id } });
+    const checkUser = await UserRepo.findOne({ where: { id: Number(id) } });
 
     if (!checkUser) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    await UserRepo.delete({ id });
+    await UserRepo.delete({ id: Number(id) });
 
-    res.status(201).json({ msg: "Usuario eliminado!" });
+    res.status(200).json({ msg: "Usuario eliminado!" });
   } catch (error) {
     res.status(404).json({ error: "Error eliminando usuario" });
   }
