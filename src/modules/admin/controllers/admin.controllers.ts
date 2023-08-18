@@ -17,7 +17,7 @@ import {
   CourseData,
   PensumData,
   PeriodData,
-} from "../../students/types";
+} from "../../../types";
 import { hashPass } from "../../../utilities/bcrypt.utility";
 
 // CREATE
