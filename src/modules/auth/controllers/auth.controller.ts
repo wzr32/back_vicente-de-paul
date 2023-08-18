@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 import { checkPass, hashPass } from "../../../utilities/bcrypt.utility";
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body;
 
   try {
@@ -14,12 +14,12 @@ export const loginUser = async (req: Request, res: Response) => {
       relations: ["role"],
     });
     if (!user) {
-      res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
     // Verificar password
     if (user && !checkPass(password, user.password)) {
-      res.status(401).json({ error: "Contraseña inválida" });
+      return res.status(401).json({ error: "Contraseña inválida" });
     }
 
     const userData = jwt.sign(
