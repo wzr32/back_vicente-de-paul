@@ -5,7 +5,7 @@ import {
   Representant,
   Student,
   Teacher,
-} from "../../../entities";
+} from "../entities";
 
 export interface StudentData extends Student {}
 export interface RepresentantData extends Representant {}
