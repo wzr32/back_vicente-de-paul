@@ -29,6 +29,9 @@ export class Teacher extends BaseEntity {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Column({ unique: true, nullable: false })
+  phone: string;
+
   @CreateDateColumn({
     name: "created_at",
     default: () => "timezone('America/Caracas', now())",

@@ -14,7 +14,6 @@ import {
   StudentData,
   RepresentantData,
   TeacherData,
-  CourseData,
   PensumData,
   PeriodData,
 } from "../../../types";
@@ -38,11 +37,8 @@ export const createStudent = async (
       where: { dni: student.dni },
     });
 
-    console.log("checkStudent =>> ", checkStudent);
-
     if (checkStudent)
       return res.status(409).json({ error: "Estudiante ya existe" });
-    console.log("after check student");
 
     const checkRepresentant = await RepresentantRepo.findOne({
       where: { dni: representant.dni },
@@ -270,10 +266,15 @@ export const getTeacher = async (
   const { id } = req.body;
   try {
     const teacher = await TeacherRepo.findOneBy({ id });
+
+    if (!teacher) {
+      return res.status(404).json({ error: "Profesor no existe" });
+    }
+
     res.status(200).json(teacher);
   } catch (error) {
     if (error instanceof EntityNotFoundError) {
-      res.status(404).json({ error: "Profesor no existe" });
+      return res.status(404).json({ error: "Profesor no existe" });
     }
     res.status(400).json({ error: "Error obteniendo profesor" });
     console.log("error getting teacher =>> ", error);
