@@ -22,15 +22,6 @@ export class Period extends BaseEntity {
   @Column({ nullable: true })
   observations: string;
 
-  @Column({ nullable: false, name: "teacher_id" })
-  teacherId: number;
-
-  @Column({ nullable: false, name: "student_id" })
-  studentId: number;
-
-  @Column({ nullable: false, name: "course_id" })
-  courseId: number;
-
   @ManyToOne(() => Teacher)
   teacher: Teacher;
 
@@ -40,22 +31,22 @@ export class Period extends BaseEntity {
   @ManyToOne(() => Course)
   course: Course;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   start_date_lap1: Date;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   end_date_lap1: Date;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   start_date_lap2: Date;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   end_date_lap2: Date;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   start_date_lap3: Date;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   end_date_lap3: Date;
 
   @OneToMany(() => Section, (section) => section.period)

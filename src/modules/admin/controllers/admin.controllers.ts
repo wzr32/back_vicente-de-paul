@@ -98,6 +98,7 @@ export const createTeacher = async (
     const newTeacher = TeacherRepo.create({
       dni: teacher.dni,
       email: teacher.email,
+      phone: teacher.phone,
       firstName: teacher.firstName,
       middleName: teacher.middleName,
       firstLastName: teacher.firstLastName,
@@ -123,108 +124,6 @@ export const createTeacher = async (
     console.log("error creating teacher =>> ", error);
   }
 };
-
-export const createPensum = async (
-  req: Request<{}, {}, { pensum: PensumData }>,
-  res: Response
-): Promise<any> => {
-  const { pensum } = req.body;
-
-  try {
-    const checkTeacher = await TeacherRepo.findOne({
-      where: { id: pensum.teacher.id },
-    });
-    if (!checkTeacher)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el profesor asignado" });
-
-    const checkstudent = await StudentRepo.findOne({
-      where: { id: pensum.student.id },
-    });
-    if (!checkstudent)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el estudiante asignado" });
-
-    const checkPeriod = await PeriodRepo.findOne({
-      where: { id: pensum.period.id },
-    });
-    if (!checkPeriod)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el periodo asignado" });
-
-    const checkCourse = await CourseRepo.findOne({
-      where: { id: pensum.course.id },
-    });
-    if (!checkCourse)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el curso asignado" });
-
-    const newPensum = PensumRepo.create({
-      teacher: checkTeacher!!,
-      student: checkstudent!!,
-      period: checkPeriod!!,
-      course: checkCourse!!,
-    });
-
-    await PensumRepo.save(newPensum);
-    res.status(201).json({ msg: "Pensum creado!" });
-  } catch (error) {
-    res.status(400).json({ error: "error creando curso" });
-    console.log("error creating pensum =>> ", error);
-  }
-};
-
-export const createPeriod = async (
-  req: Request<{}, {}, { period: PeriodData }>,
-  res: Response
-): Promise<any> => {
-  const { period } = req.body;
-
-  try {
-    const checkTeacher = await TeacherRepo.findOne({
-      where: { id: period.teacherId },
-    });
-    if (!checkTeacher)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el profesor asignado" });
-
-    const checkstudent = await TeacherRepo.findOne({
-      where: { id: period.studentId },
-    });
-    if (!checkstudent)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el estudiante asignado" });
-
-    const checkCourse = await TeacherRepo.findOne({
-      where: { id: period.courseId },
-    });
-    if (!checkCourse)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el curso asignado" });
-
-    const newPeriod = PeriodRepo.create({
-      name: period.name,
-      observations: period.observations,
-      teacherId: checkTeacher?.id,
-      studentId: checkstudent?.id,
-      courseId: checkCourse?.id,
-      teacher: checkTeacher!!,
-      student: checkstudent!!,
-      course: checkCourse!!,
-    });
-  } catch (error) {
-    res.status(400).json({ error: "error creando curso" });
-    console.log("error creating period =>> ", error);
-  }
-};
-
 // READ
 
 export const getStudent = async (
