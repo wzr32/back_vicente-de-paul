@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EntityNotFoundError } from "typeorm";
+import { EntityNotFoundError, In } from "typeorm";
 import {
   Course as CourseRepo,
   Pensum as PensumRepo,
@@ -16,6 +16,7 @@ import {
   TeacherData,
   PensumData,
   PeriodData,
+  CourseData,
 } from "../../../types";
 import { hashPass } from "../../../utilities/bcrypt.utility";
 
@@ -82,18 +83,20 @@ export const createStudent = async (
 };
 
 export const createTeacher = async (
-  req: Request<{}, {}, { teacher: TeacherData }>,
+  req: Request<{}, {}, { teacher: TeacherData; courses: CourseData[] }>,
   res: Response
 ): Promise<any> => {
-  const { teacher } = req.body;
+  const { teacher, courses } = req.body;
 
   try {
     const checkTeacher = await TeacherRepo.findOne({
       where: { dni: teacher.dni },
     });
 
-    if (checkTeacher)
-      return res.status(409).json({ error: "Profesor ya existe" });
+    if (checkTeacher) {
+      res.status(409).json({ error: "Profesor ya existe" });
+      return;
+    }
 
     const newTeacher = TeacherRepo.create({
       dni: teacher.dni,
@@ -105,9 +108,36 @@ export const createTeacher = async (
       secondLastName: teacher.secondLastName,
     });
 
-    const role = await RoleRepo.findOne({ where: { role_name: "teacher" } });
+    const newCoursesArray = [];
 
-    if (!role) return res.status(500).json({ error: "Ocurrio un error" });
+    if (courses.length > 0) {
+      const coursesArray = await CourseRepo.findBy({ id: In(courses) });
+
+      if (coursesArray.length !== courses.length) {
+        res.status(409).json({
+          error: "Uno o mas cursos no fueron encontrados en la base de datos",
+        });
+        return;
+      }
+
+      if (teacher.courses !== undefined) {
+        teacher.courses = [...teacher.courses, ...coursesArray];
+      } else {
+        teacher.courses = [...coursesArray];
+      }
+
+      for await (const course of coursesArray) {
+        course.teacher = teacher;
+        newCoursesArray.push(course);
+      }
+    }
+
+    const role = await RoleRepo.findOneBy({ role_name: "teacher" });
+
+    if (!role) {
+      res.status(500).json({ error: "Ocurrio un error" });
+      return;
+    }
 
     const newUser = UserRepo.create({
       email: newTeacher!!.email,
@@ -115,6 +145,7 @@ export const createTeacher = async (
       role: role!!,
     });
 
+    await CourseRepo.save(newCoursesArray);
     await TeacherRepo.insert(newTeacher);
     await UserRepo.insert(newUser);
 
@@ -145,6 +176,7 @@ export const getStudent = async (
     console.log("error getting student =>> ", error);
   }
 };
+
 export const getAllStudents = async (
   req: Request,
   res: Response
@@ -179,6 +211,7 @@ export const getTeacher = async (
     console.log("error getting teacher =>> ", error);
   }
 };
+
 export const getAllTeachers = async (
   req: Request,
   res: Response
@@ -208,5 +241,43 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 // UPDATE
+
+// export const addTeacherCourses = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   const { teacherID, coursesData } = req.body;
+//   try {
+//     const teacher = await TeacherRepo.findOneBy({ id: Number(teacherID) });
+//     if (!teacher) {
+//       res.status(404).json({ error: "Profesor no encontrado" });
+//       return;
+//     }
+
+//     const courses = await CourseRepo.findBy({ id: In(coursesData) });
+
+//     if (courses.length !== coursesData.length) {
+//       res.status(409).json({
+//         error: "Uno o mas cursos no fueron encontrados en la base de datos",
+//       });
+//       return;
+//     }
+
+//     const newCoursesArray = [];
+//     for await (const course of courses) {
+//       course.teacher = teacher;
+//       newCoursesArray.push(course);
+//     }
+
+//     teacher.courses = [...teacher.courses, ...courses];
+//     await TeacherRepo.save(teacher);
+//     await CourseRepo.save(newCoursesArray);
+
+//     res.status(201).json({ msg: "Cursos agregados" });
+//   } catch (error) {
+//     res.status(400).json({ error: "Ocurrio un error actualizando" });
+//     console.log("error assigning courses =>> ", error);
+//   }
+// };
 
 // DELETE

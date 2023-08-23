@@ -3,8 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Course } from "./course.entity";
 
 @Entity({ name: "teachers" })
 export class Teacher extends BaseEntity {
@@ -38,4 +41,7 @@ export class Teacher extends BaseEntity {
     nullable: false,
   })
   createdAt: Date;
+
+  @OneToMany(() => Course, (course) => course.teacher)
+  courses: Course[];
 }

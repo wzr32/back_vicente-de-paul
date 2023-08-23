@@ -7,7 +7,14 @@ import {
   getStudent,
   getTeacher,
   getAllUsers,
+  createPeriod,
+  deletePeriod,
 } from "../controllers";
+import {
+  createSection,
+  getAllPeriods,
+  getAllSections,
+} from "../controllers/section.controller";
 
 const router = Router();
 
@@ -20,7 +27,12 @@ router
   .get("/get-teacher/:id", getTeacher)
   .get("/get-teachers", getAllTeachers)
   .get("/get-users", getAllUsers)
+  .get("/get-sections", getAllSections)
+  .get("/get-periods", getAllPeriods)
   .post("/create-student", createStudent)
-  .post("/create-teacher", createTeacher);
+  .post("/create-period", createPeriod)
+  .post("/create-section", createSection)
+  .post("/create-teacher", createTeacher)
+  .delete("/delete-period/:id", deletePeriod);
 
 export default router;

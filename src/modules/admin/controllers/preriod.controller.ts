@@ -4,67 +4,61 @@ import {
   Period as PeriodRepo,
   Teacher as TeacherRepo,
   Student as StudentRepo,
+  Section as SectionRepo,
 } from "../../../entities";
 import { PeriodData } from "../../../types";
 
 export const createPeriod = async (
-  req: Request<
-    {},
-    {},
-    {
-      period: PeriodData & {
-        teacherId: number;
-        studentId: number;
-        courseId: number;
-      };
-    }
-  >,
+  req: Request,
   res: Response
 ): Promise<any> => {
   const { period } = req.body;
 
   try {
-    const checkTeacher = await TeacherRepo.findOne({
-      where: { id: period.teacherId },
-    });
-    if (!checkTeacher)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el profesor asignado" });
+    const checkSection = await SectionRepo.findOneBy({ id: period.section });
+    if (!checkSection) {
+      res.status(404).json({ error: "No se encuentra la seccion asignada" });
+      return;
+    }
 
-    const checkstudent = await StudentRepo.findOne({
-      where: { id: period.studentId },
-    });
-    if (!checkstudent)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el estudiante asignado" });
+    const checkPeriod = await PeriodRepo.findOneBy({ name: period.name });
 
-    const checkCourse = await CourseRepo.findOne({
-      where: { id: period.courseId },
-    });
-    if (!checkCourse)
-      return res
-        .status(404)
-        .json({ error: "No se encuentra el curso asignado" });
+    if (checkPeriod) {
+      res.status(409).json({ error: "Nombre de periodo ya en uso." });
+      return;
+    }
 
     const newPeriod = PeriodRepo.create({
       name: period.name,
       observations: period.observations,
-      teacher: checkTeacher!!,
-      student: checkstudent!!,
-      course: checkCourse!!,
-      start_date_lap1: period.start_date_lap1,
-      end_date_lap1: period.end_date_lap1,
-      start_date_lap2: period.start_date_lap2,
-      end_date_lap2: period.end_date_lap2,
-      start_date_lap3: period.start_date_lap3,
-      end_date_lap3: period.end_date_lap3,
+      section: checkSection,
     });
 
+    await PeriodRepo.insert(newPeriod);
     res.status(201).json({ msg: "Periodo creado" });
   } catch (error) {
-    res.status(400).json({ error: "error creando curso" });
+    res.status(400).json({ error: "error creando periodo" });
     console.log("error creating period =>> ", error);
+  }
+};
+
+export const deletePeriod = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const checkPeriod = PeriodRepo.findOneBy({ id: Number(id) });
+
+    if (!checkPeriod) {
+      res.status(404).json({ error: "Periodo no encontrado" });
+      return;
+    }
+
+    await PeriodRepo.delete({ id: Number(id) });
+    res.status(200).json({ msg: "Periodo eliminado" });
+  } catch (error) {
+    res.status(400).json({ error: "Error eliminando periodo" });
+    console.log("error deleting period =>> ", error);
   }
 };
