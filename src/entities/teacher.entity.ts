@@ -3,8 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Course } from "./course.entity";
 
 @Entity({ name: "teachers" })
 export class Teacher extends BaseEntity {
@@ -29,10 +32,16 @@ export class Teacher extends BaseEntity {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Column({ unique: true, nullable: false })
+  phone: string;
+
   @CreateDateColumn({
     name: "created_at",
     default: () => "timezone('America/Caracas', now())",
     nullable: false,
   })
   createdAt: Date;
+
+  @OneToMany(() => Course, (course) => course.teacher)
+  courses: Course[];
 }
