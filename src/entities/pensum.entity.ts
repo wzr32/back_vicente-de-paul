@@ -3,23 +3,21 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Course, Period, Student, Teacher } from ".";
+import { Course, Grade, Period, Section, Student, Teacher } from ".";
 
 @Entity({ name: "pensum" })
 export class Pensum extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Teacher)
-  @JoinColumn({ name: "teacher_id" })
-  teacher: Teacher;
-
-  @ManyToOne(() => Student)
-  @JoinColumn({ name: "student_id" })
-  student: Student;
+  @Column({ unique: true, nullable: false })
+  name: string;
 
   @ManyToOne(() => Period)
   @JoinColumn({ name: "period_id" })
@@ -29,12 +27,30 @@ export class Pensum extends BaseEntity {
   @JoinColumn({ name: "course_id" })
   course: Course;
 
-  @Column({ type: "integer" })
-  grade_lap1: number;
+  @ManyToOne(() => Section)
+  @JoinColumn({ name: "section_id" })
+  section: Section;
 
-  @Column({ type: "integer" })
-  grade_lap2: number;
+  @OneToMany(() => Grade, (grade) => grade.pensum)
+  grades: Grade[];
 
-  @Column({ type: "integer" })
-  grade_lap3: number;
+  @ManyToMany(() => Teacher)
+  @JoinTable({
+    name: "pensum_teachers",
+    joinColumn: { name: "pensum_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "teacher_id", referencedColumnName: "id" },
+  })
+  teachers: Teacher[];
+
+  @ManyToMany(() => Student)
+  @JoinTable({
+    name: "pensum_students",
+    joinColumn: { name: "pensum_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "student_id", referencedColumnName: "id" },
+  })
+  students: Student[];
+
+  @ManyToMany(() => Course, (course) => course.pensums)
+  @JoinTable()
+  courses: Course[];
 }

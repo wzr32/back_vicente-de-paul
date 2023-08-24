@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import {
   Course,
+  Grade,
   Pensum,
   Period,
   Representant,
@@ -23,6 +24,7 @@ export const AppDataSource = new DataSource({
   logging: false,
   entities: [
     Course,
+    Grade,
     Pensum,
     Period,
     Representant,
