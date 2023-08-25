@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
 import {
-  Course as CourseRepo,
   Period as PeriodRepo,
-  Teacher as TeacherRepo,
-  Student as StudentRepo,
   Section as SectionRepo,
 } from "../../../entities";
-import { PeriodData } from "../../../types";
 
 export const createPeriod = async (
   req: Request,
@@ -28,11 +24,11 @@ export const createPeriod = async (
       return;
     }
 
-    const newPeriod = PeriodRepo.create({
+    const newPeriod = {
       name: period.name,
       observations: period.observations,
-      section: checkSection,
-    });
+      section: checkSection!!,
+    };
 
     await PeriodRepo.insert(newPeriod);
     res.status(201).json({ msg: "Periodo creado" });

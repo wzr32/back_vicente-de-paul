@@ -1,4 +1,5 @@
 export * from "./course.entity";
+export * from "./grade.entity";
 export * from "./pensum.entity";
 export * from "./period.entity";
 export * from "./representant.entity";

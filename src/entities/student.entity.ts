@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Representant } from "./representant.entity";
+import { Grade } from "./grade.entity";
 
 @Entity({ name: "students" })
 export class Student extends BaseEntity {
@@ -45,4 +47,7 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Representant)
   @JoinColumn({ name: "representant_id" })
   representant: Representant;
+
+  @OneToMany(() => Grade, (grade) => grade.student)
+  grades: Grade[];
 }

@@ -98,17 +98,7 @@ export const createTeacher = async (
       return;
     }
 
-    const newTeacher = TeacherRepo.create({
-      dni: teacher.dni,
-      email: teacher.email,
-      phone: teacher.phone,
-      firstName: teacher.firstName,
-      middleName: teacher.middleName,
-      firstLastName: teacher.firstLastName,
-      secondLastName: teacher.secondLastName,
-    });
-
-    const newCoursesArray = [];
+    let newCoursesArray: CourseData[] = [];
 
     if (courses.length > 0) {
       const coursesArray = await CourseRepo.findBy({ id: In(courses) });
@@ -120,16 +110,29 @@ export const createTeacher = async (
         return;
       }
 
-      if (teacher.courses !== undefined) {
-        teacher.courses = [...teacher.courses, ...coursesArray];
-      } else {
-        teacher.courses = [...coursesArray];
-      }
+      newCoursesArray = coursesArray;
+    }
 
-      for await (const course of coursesArray) {
-        course.teacher = teacher;
-        newCoursesArray.push(course);
+    const newTeacher = TeacherRepo.create({
+      dni: teacher.dni,
+      email: teacher.email,
+      phone: teacher.phone,
+      firstName: teacher.firstName,
+      middleName: teacher.middleName,
+      firstLastName: teacher.firstLastName,
+      secondLastName: teacher.secondLastName,
+      courses: newCoursesArray,
+    });
+
+    await TeacherRepo.insert(newTeacher);
+
+    for await (let course of newCoursesArray) {
+      if (Array.isArray(course.teachers)) {
+        course.teachers = [...course.teachers, newTeacher];
+      } else {
+        course.teachers = [newTeacher];
       }
+      await CourseRepo.save(course);
     }
 
     const role = await RoleRepo.findOneBy({ role_name: "teacher" });
@@ -145,8 +148,6 @@ export const createTeacher = async (
       role: role!!,
     });
 
-    await CourseRepo.save(newCoursesArray);
-    await TeacherRepo.insert(newTeacher);
     await UserRepo.insert(newUser);
 
     res.status(201).json({ msg: "Profesor creado!", teacher: newTeacher });
@@ -217,7 +218,10 @@ export const getAllTeachers = async (
   res: Response
 ): Promise<any> => {
   try {
-    const teachers = await TeacherRepo.find();
+    const teachers = await TeacherRepo.find({
+      relations: ["courses"],
+    });
+
     res.status(200).json(teachers);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo profesores" });

@@ -3,11 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Teacher } from "./teacher.entity";
+import { Pensum } from "./pensum.entity";
 
 @Entity({ name: "courses" })
 export class Course extends BaseEntity {
@@ -24,7 +24,6 @@ export class Course extends BaseEntity {
   })
   createdAt: Date;
 
-  @ManyToOne(() => Teacher, (teacher) => teacher.courses)
-  @JoinColumn({ name: "teacher_id" })
-  teacher: Teacher;
+  @ManyToMany(() => Teacher, (teacher) => teacher.courses)
+  teachers!: Teacher[];
 }

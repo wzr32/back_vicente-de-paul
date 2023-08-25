@@ -9,6 +9,8 @@ import {
   getAllUsers,
   createPeriod,
   deletePeriod,
+  createPensum,
+  getAllPensums,
 } from "../controllers";
 import {
   createSection,
@@ -29,10 +31,12 @@ router
   .get("/get-users", getAllUsers)
   .get("/get-sections", getAllSections)
   .get("/get-periods", getAllPeriods)
+  .get("/get-pensums", getAllPensums)
   .post("/create-student", createStudent)
   .post("/create-period", createPeriod)
   .post("/create-section", createSection)
   .post("/create-teacher", createTeacher)
+  .post("/create-pensum", createPensum)
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;
