@@ -16,7 +16,7 @@ export class Pensum extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: true })
   name: string;
 
   @ManyToOne(() => Period)
@@ -31,26 +31,15 @@ export class Pensum extends BaseEntity {
   @JoinColumn({ name: "section_id" })
   section: Section;
 
-  @OneToMany(() => Grade, (grade) => grade.pensum)
-  grades: Grade[];
+  @ManyToOne(() => Grade)
+  @JoinColumn({ name: "grade_id" })
+  grade: Grade;
 
-  @ManyToMany(() => Teacher)
-  @JoinTable({
-    name: "pensum_teachers",
-    joinColumn: { name: "pensum_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "teacher_id", referencedColumnName: "id" },
-  })
-  teachers: Teacher[];
+  @ManyToOne(() => Teacher)
+  @JoinColumn({ name: "teacher_id" })
+  teacher: Teacher;
 
-  @ManyToMany(() => Student)
-  @JoinTable({
-    name: "pensum_students",
-    joinColumn: { name: "pensum_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "student_id", referencedColumnName: "id" },
-  })
-  students: Student[];
-
-  @ManyToMany(() => Course, (course) => course.pensums)
-  @JoinTable()
-  courses: Course[];
+  @ManyToOne(() => Student)
+  @JoinColumn({ name: "student_id" })
+  student: Student;
 }

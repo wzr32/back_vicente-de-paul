@@ -24,11 +24,11 @@ export const createPeriod = async (
       return;
     }
 
-    const newPeriod = PeriodRepo.create({
+    const newPeriod = {
       name: period.name,
       observations: period.observations,
-      section: checkSection,
-    });
+      section: checkSection!!,
+    };
 
     await PeriodRepo.insert(newPeriod);
     res.status(201).json({ msg: "Periodo creado" });

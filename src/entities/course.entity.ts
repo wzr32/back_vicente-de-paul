@@ -26,7 +26,4 @@ export class Course extends BaseEntity {
 
   @ManyToMany(() => Teacher, (teacher) => teacher.courses)
   teachers!: Teacher[];
-
-  @ManyToMany(() => Pensum, (pensum) => pensum.courses)
-  pensums: Pensum[];
 }

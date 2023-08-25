@@ -15,13 +15,13 @@ export class Grade extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "integer", nullable: true })
+  @Column({ type: "integer", default: 0 })
   grade_lap1: number;
 
-  @Column({ type: "integer", nullable: true })
+  @Column({ type: "integer", default: 0 })
   grade_lap2: number;
 
-  @Column({ type: "integer", nullable: true })
+  @Column({ type: "integer", default: 0 })
   grade_lap3: number;
 
   @ManyToOne(() => Pensum)
