@@ -1,5 +1,6 @@
 import {
   Course,
+  Grade,
   Pensum,
   Period,
   Representant,
@@ -15,3 +16,4 @@ export interface CourseData extends Course {}
 export interface PensumData extends Pensum {}
 export interface PeriodData extends Period {}
 export interface SectionData extends Section {}
+export interface GradeData extends Grade {}
