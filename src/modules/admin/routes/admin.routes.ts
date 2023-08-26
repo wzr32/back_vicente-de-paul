@@ -17,6 +17,7 @@ import {
   getAllPeriods,
   getAllSections,
 } from "../controllers/section.controller";
+import { updateGrades } from "../controllers/grade.controller";
 
 const router = Router();
 
@@ -37,6 +38,7 @@ router
   .post("/create-section", createSection)
   .post("/create-teacher", createTeacher)
   .post("/create-pensum", createPensum)
+  .put("/update-grades", updateGrades)
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;
