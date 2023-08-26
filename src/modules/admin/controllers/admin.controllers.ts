@@ -183,7 +183,15 @@ export const getAllStudents = async (
   res: Response
 ): Promise<any> => {
   try {
-    const students = await StudentRepo.find();
+    // const students = await StudentRepo.find();
+
+    const students = await StudentRepo.createQueryBuilder("student")
+      .leftJoinAndSelect("student.grades", "grades")
+      .leftJoinAndSelect("grades.pensum", "pensum")
+      .leftJoinAndSelect("pensum.period", "period")
+      .leftJoinAndSelect("pensum.section", "section")
+      .getMany();
+
     res.status(200).json(students);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo estudiantes" });

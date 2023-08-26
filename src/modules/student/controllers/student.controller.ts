@@ -17,6 +17,26 @@ export const getStudentWithGrades = async (
     res.status(200).json(student);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo estudiante" });
+    console.log("error getting student", error);
+  }
+};
+
+export const getStudentByDni = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { dni } = req.body;
+  try {
+    const student = await StudentRepo.findOne({
+      where: { dni },
+    });
+    if (!student) {
+      res.status(404).json({ error: "Estudiante no encontrado" });
+      return;
+    }
+    res.status(200).json(student);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo estudiante" });
     console.log("error getting student by dni", error);
   }
 };
