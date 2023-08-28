@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 import { checkPass, hashPass } from "../../../utilities/bcrypt.utility";
 
-export const loginUser = async (req: Request, res: Response): Promise<any> => {
+export const loginTeacherUser = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   const { email, password } = req.body;
 
   try {
@@ -22,6 +25,11 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
       return res.status(401).json({ error: "Contraseña inválida" });
     }
 
+    if (user && user.role.role_name === "admin") {
+      res.status(409).json({ error: "Usuario no es profesor" });
+      return;
+    }
+
     const userData = jwt.sign(
       {
         id: user?.id,
@@ -34,6 +42,52 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     );
 
     // Retornar datos del usuario
+    res.status(200).json({
+      access_token: userData,
+      user: { email: user?.email, role: user?.role.id },
+    });
+  } catch (error) {
+    res.status(404).json({ error: "Error iniciando sesion" });
+  }
+};
+
+export const loginAdminUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await UserRepo.findOne({
+      where: { email },
+      relations: ["role"],
+    });
+    if (!user) {
+      res.status(404).json({ error: "Usuario no encontrado" });
+      return;
+    }
+
+    if (user && !checkPass(password, user.password)) {
+      res.status(401).json({ error: "Contraseña inválida" });
+      return;
+    }
+
+    if (user && user.role.role_name === "teacher") {
+      res.status(409).json({ error: "Usuario no es administrativo" });
+      return;
+    }
+
+    const userData = jwt.sign(
+      {
+        id: user?.id,
+        role: user?.role.id,
+      },
+      SECRET_KEY,
+      {
+        expiresIn: 1000 * 60 * 30,
+      }
+    );
+
     res.status(200).json({
       access_token: userData,
       user: { email: user?.email, role: user?.role.id },
