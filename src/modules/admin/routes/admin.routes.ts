@@ -11,10 +11,10 @@ import {
   deletePeriod,
   createPensum,
   getAllPensums,
+  getAllPeriods,
 } from "../controllers";
 import {
   createSection,
-  getAllPeriods,
   getAllSections,
 } from "../controllers/section.controller";
 import { updateGrades } from "../controllers/grade.controller";

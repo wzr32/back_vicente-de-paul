@@ -4,19 +4,37 @@ import {
   Section as SectionRepo,
 } from "../../../entities";
 
+interface CreatePeriodWithSectionsRequest {
+  period: {
+    name: string;
+    observations: string;
+  };
+  sections: {
+    name: string;
+  }[];
+}
+
+export const getAllPeriods = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const periods = await PeriodRepo.find({ relations: ["sections"] });
+    res.status(200).json(periods);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo periodos" });
+    console.log("error getting periods =>> ", error);
+  }
+};
+
 export const createPeriod = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { period } = req.body;
+  const requestData: CreatePeriodWithSectionsRequest = req.body;
+  const { period, sections } = requestData;
 
   try {
-    const checkSection = await SectionRepo.findOneBy({ id: period.section });
-    if (!checkSection) {
-      res.status(404).json({ error: "No se encuentra la seccion asignada" });
-      return;
-    }
-
     const checkPeriod = await PeriodRepo.findOneBy({ name: period.name });
 
     if (checkPeriod) {
@@ -24,14 +42,19 @@ export const createPeriod = async (
       return;
     }
 
-    const newPeriod = {
-      name: period.name,
-      observations: period.observations,
-      section: checkSection!!,
-    };
+    const createdPeriod = await PeriodRepo.insert(period);
 
-    await PeriodRepo.insert(newPeriod);
-    res.status(201).json({ msg: "Periodo creado" });
+    const newSections = sections.map((section) => {
+      const newSection = SectionRepo.create({
+        ...section,
+        period: createdPeriod.generatedMaps[0],
+      });
+      return newSection;
+    });
+
+    await SectionRepo.insert(newSections);
+
+    res.status(201).json({ msg: "Periodo y secciones creadas" });
   } catch (error) {
     res.status(400).json({ error: "error creando periodo" });
     console.log("error creating period =>> ", error);

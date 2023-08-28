@@ -2,15 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Teacher } from "./teacher.entity";
-import { Student } from "./student.entity";
-import { Course } from "./course.entity";
-import { Section } from "./section.entity";
+import { Teacher, Student, Course, Section } from ".";
 
 @Entity({ name: "periods" })
 export class Period extends BaseEntity {
@@ -50,7 +46,6 @@ export class Period extends BaseEntity {
   @Column({ type: "timestamptz", nullable: true })
   end_date_lap3: Date;
 
-  @OneToOne(() => Section, (section) => section.period)
-  @JoinColumn()
-  section: Section;
+  @OneToMany(() => Section, (section) => section.period)
+  sections: Section[];
 }

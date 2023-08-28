@@ -3,7 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Period } from "./period.entity";
@@ -16,7 +17,8 @@ export class Section extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToOne(() => Period, (period) => period.section)
+  @ManyToOne(() => Period, (period) => period.sections)
+  @JoinColumn({ name: "period_id" })
   period: Period;
 
   @CreateDateColumn({
