@@ -46,6 +46,6 @@ export class Period extends BaseEntity {
   @Column({ type: "timestamptz", nullable: true })
   end_date_lap3: Date;
 
-  @OneToMany(() => Section, (section) => section.period)
+  @OneToMany(() => Section, (section) => section.period, { cascade: true })
   sections: Section[];
 }

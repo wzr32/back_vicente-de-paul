@@ -14,6 +14,18 @@ interface CreatePeriodWithSectionsRequest {
   }[];
 }
 
+interface UpdatePeriodWithSectionsRequest {
+  period: {
+    id: number;
+    name: string;
+    observations: string;
+  };
+  sections: {
+    id: number;
+    name: string;
+  }[];
+}
+
 export const getAllPeriods = async (
   req: Request,
   res: Response
@@ -58,6 +70,46 @@ export const createPeriod = async (
   } catch (error) {
     res.status(400).json({ error: "error creando periodo" });
     console.log("error creating period =>> ", error);
+  }
+};
+
+export const updatePeriod = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const requestData: UpdatePeriodWithSectionsRequest = req.body;
+  const { period, sections } = requestData;
+  console.log(period);
+  console.log(sections);
+  try {
+    const checkPeriod = await PeriodRepo.findOne({
+      where: { id: period.id },
+    });
+
+    if (!checkPeriod) {
+      res.status(404).json({ error: "Periodo no encontrado" });
+      return;
+    }
+
+    await PeriodRepo.update(period.id, period);
+
+    for (const sectionData of sections) {
+      const sectionId = sectionData.id;
+      if (sectionId) {
+        await SectionRepo.update(sectionId, sectionData);
+      } else {
+        const newSection = SectionRepo.create({
+          ...sectionData,
+          period: checkPeriod,
+        });
+        await SectionRepo.save(newSection);
+      }
+    }
+
+    res.status(200).json({ msg: "Periodo actualizado" });
+  } catch (error) {
+    res.status(400).json({ error: "Error actualizando periodo" });
+    console.log("error updating period =>> ", error);
   }
 };
 
