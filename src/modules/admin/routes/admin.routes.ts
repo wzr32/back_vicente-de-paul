@@ -12,6 +12,7 @@ import {
   createPensum,
   getAllPensums,
   getAllPeriods,
+  updatePeriod,
 } from "../controllers";
 import {
   createSection,
@@ -39,6 +40,7 @@ router
   .post("/create-teacher", createTeacher)
   .post("/create-pensum", createPensum)
   .put("/update-grades", updateGrades)
+  .put("/update-period", updatePeriod)
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;
