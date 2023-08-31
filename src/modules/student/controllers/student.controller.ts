@@ -40,3 +40,42 @@ export const getStudentByDni = async (
     console.log("error getting student by dni", error);
   }
 };
+
+export const reportAllStudentsGrades = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const studentId = 1;
+    const student = await StudentRepo.findOne({
+      where: { id: Number(studentId) },
+      relations: [
+        "grades",
+        "grades.pensum",
+        "grades.course",
+        "grades.course.teachers",
+      ],
+    });
+
+    if (!student) {
+      res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    const studentGrades = student?.grades.map((grade) => ({
+      gradeId: grade.id,
+      course: grade.course.name,
+      teacher: grade.course.teachers.map(
+        (teacher) => teacher.firstName + " " + teacher.firstLastName
+      ),
+      pensum: grade.pensum.name,
+      lap1: grade.grade_lap1,
+      lap2: grade.grade_lap2,
+      lap3: grade.grade_lap3,
+    }));
+
+    res.status(200).json(studentGrades);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo data del estudiante" });
+    console.log("error getting student data", error);
+  }
+};

@@ -183,8 +183,6 @@ export const getAllStudents = async (
   res: Response
 ): Promise<any> => {
   try {
-    // const students = await StudentRepo.find();
-
     const students = await StudentRepo.createQueryBuilder("student")
       .leftJoinAndSelect("student.grades", "grades")
       .leftJoinAndSelect("grades.pensum", "pensum")
