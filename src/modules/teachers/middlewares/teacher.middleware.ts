@@ -1,9 +1,9 @@
-import { NextFunction, Response, Request } from "express";
-import { User } from "../../../entities";
+import { NextFunction, Request, Response } from "express";
+import { User as UserRepo } from "../../../entities";
 import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 
-export const adminMiddleware = async (
+export const teacherMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -24,12 +24,12 @@ export const adminMiddleware = async (
     res.status(401).json({ error: "Acceso no autorizado. Token inválido." });
   }
 
-  const user = await User.findOne({
+  const user = await UserRepo.findOne({
     where: { id: decoded.id },
     relations: ["role"],
   });
 
-  if (Number(user?.role.id) === 1) {
+  if (Number(user?.role.id) === 2) {
     next();
   } else {
     res.status(403).send("Usuario no autorizado");

@@ -23,9 +23,6 @@ import { updateGrades } from "../controllers/grade.controller";
 const router = Router();
 
 router
-  .get("/", (_, res) => {
-    res.status(200).json({ msg: "admin router working!" });
-  })
   .get("/get-student/:id", getStudent)
   .get("/get-students", getAllStudents)
   .get("/get-teacher/:id", getTeacher)
