@@ -30,6 +30,12 @@ export const getStudentByDni = async (
   res: Response
 ): Promise<void> => {
   const { dni } = req.body;
+
+  if (dni === undefined || dni === null) {
+    res.status(400).json({ error: "Faltan datos en la peticion" });
+    return;
+  }
+
   try {
     const student = await StudentRepo.findOne({
       where: { dni },
@@ -51,9 +57,16 @@ export const reportAllStudentGrades = async (
 ): Promise<void> => {
   const { dni } = req.body;
 
+  if (dni === undefined || dni === null) {
+    res.status(400).json({ error: "Faltan datos en la peticion" });
+    return;
+  }
+
   try {
     const student = await StudentRepo.findOne({
-      where: { dni },
+      where: {
+        dni,
+      },
       relations: [
         "grades",
         "grades.pensum",
@@ -65,6 +78,7 @@ export const reportAllStudentGrades = async (
 
     if (!student) {
       res.status(404).json({ error: "Estudiante no encontrado" });
+      return;
     }
 
     const studentGrades = student?.grades.map((grade) => ({
