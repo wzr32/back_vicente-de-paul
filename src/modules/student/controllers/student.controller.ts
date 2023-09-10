@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
 import { Student as StudentRepo } from "../../../entities";
+import puppeteer, { PDFOptions } from "puppeteer";
+import path from "path";
+import ejs from "ejs";
+import * as fs from "fs";
 
 export const getStudentWithGrades = async (
   req: Request,
@@ -41,17 +45,19 @@ export const getStudentByDni = async (
   }
 };
 
-export const reportAllStudentsGrades = async (
+export const reportAllStudentGrades = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  const { dni } = req.body;
+
   try {
-    const studentId = 1;
     const student = await StudentRepo.findOne({
-      where: { id: Number(studentId) },
+      where: { dni },
       relations: [
         "grades",
         "grades.pensum",
+        "grades.pensum.period",
         "grades.course",
         "grades.course.teachers",
       ],
@@ -67,13 +73,56 @@ export const reportAllStudentsGrades = async (
       teacher: grade.course.teachers.map(
         (teacher) => teacher.firstName + " " + teacher.firstLastName
       ),
-      pensum: grade.pensum.name,
+      period: grade.pensum.period.name,
       lap1: grade.grade_lap1,
       lap2: grade.grade_lap2,
       lap3: grade.grade_lap3,
     }));
 
-    res.status(200).json(studentGrades);
+    const imagePath = path.join(
+      __dirname,
+      "../../../public",
+      "san_vicente.png"
+    );
+    const image = fs.readFileSync(imagePath);
+    const base64Image = Buffer.from(image).toString("base64");
+
+    const data = {
+      name: student?.firstName + " " + student?.firstLastName,
+      dni: student?.dni,
+      studentGrades,
+      imageData: base64Image,
+    };
+
+    let browser: any;
+    const templatePath = path.join(
+      __dirname,
+      "../templates",
+      "student-grades-report.ejs"
+    );
+
+    (async () => {
+      browser = await puppeteer.launch();
+      const [page] = await browser.pages();
+      const html = await ejs.renderFile(templatePath, data);
+      await page.setContent(html, { waitUntil: "domcontentloaded" });
+
+      const pdfOptions: PDFOptions = {
+        format: "a4",
+        printBackground: true,
+      };
+
+      const pdfBuffer = await page.pdf(pdfOptions);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
+      res.status(200).send(pdfBuffer);
+    })()
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      })
+      .finally(() => browser?.close());
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo data del estudiante" });
     console.log("error getting student data", error);

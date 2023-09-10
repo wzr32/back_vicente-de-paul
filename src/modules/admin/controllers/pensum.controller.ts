@@ -81,13 +81,12 @@ export const createPensum = async (
           newPensumArray
         );
 
-        for (const savedPensum of savedPensums) {
-          for (const student of [savedPensum.student]) {
+        for await (const savedPensum of savedPensums) {
+          for await (const student of [savedPensum.student]) {
             const newGrade = GradeRepo.create({
               pensum: savedPensum,
               student: student,
               course: savedPensum.course,
-              // Asigna los valores de las notas si es necesario
             });
             await transactionalEntityManager.save(newGrade);
           }
@@ -95,9 +94,9 @@ export const createPensum = async (
       }
     );
 
-    res.status(201).json({ msg: "Pensum creado!" });
+    res.status(201).json({ msg: "Grupo creado!" });
   } catch (error) {
-    res.status(400).json({ error: "error creando curso" });
+    res.status(400).json({ error: "error creando grupo" });
     console.log("error creating pensum =>> ", error);
   }
 };
@@ -155,5 +154,114 @@ export const getAllPensums = async (
   } catch (error) {
     res.status(400).json({ error: "error obteniendo cursos" });
     console.log("error creating pensum =>> ", error);
+  }
+};
+
+export const updatePensum = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const { pensum } = req.body;
+  try {
+    await AppDataSource.manager.transaction(
+      async (transactionalEntityManager) => {
+        const newPensumArray = [];
+
+        for (const item of pensum) {
+          const checkPensum = await transactionalEntityManager.findOne(
+            PensumRepo,
+            { where: { id: item.id } }
+          );
+          if (!checkPensum)
+            return res.status(404).json({
+              error: `No se encuentra el grupo con ID ${item.id}`,
+            });
+
+          const checkTeacher = await transactionalEntityManager.findOne(
+            TeacherRepo,
+            { where: { id: item.teacher_id } }
+          );
+          if (!checkTeacher)
+            return res.status(404).json({
+              error: `No se encuentra el profesor con ID ${item.teacher_id}`,
+            });
+
+          const checkPeriod = await transactionalEntityManager.findOne(
+            PeriodRepo,
+            { where: { id: item.period_id } }
+          );
+          if (!checkPeriod)
+            return res.status(404).json({
+              error: `No se encuentra el periodo con ID ${item.teacher_id}`,
+            });
+
+          const checkSection = await transactionalEntityManager.findOne(
+            SectionRepo,
+            { where: { id: item.section_id } }
+          );
+          if (!checkSection)
+            return res.status(404).json({
+              error: `No se encuentra el seccion con ID ${item.teacher_id}`,
+            });
+
+          const checkCourse = await transactionalEntityManager.findOne(
+            CourseRepo,
+            { where: { id: item.course_id } }
+          );
+          if (!checkCourse)
+            return res.status(404).json({
+              error: `No se encuentra el curso con ID ${item.teacher_id}`,
+            });
+
+          const checkStudent = await transactionalEntityManager.findOne(
+            StudentRepo,
+            {
+              where: { id: item.student_id },
+              relations: ["grades", "grades.course"],
+            }
+          );
+          if (!checkStudent)
+            return res.status(404).json({
+              error: `No se encuentra el estudiante con ID ${item.teacher_id}`,
+            });
+
+          const pensumItem = PensumRepo.create({
+            teacher: checkTeacher!!,
+            student: checkStudent!!,
+            period: checkPeriod!!,
+            course: checkCourse!!,
+            section: checkSection!!,
+          });
+
+          newPensumArray.push(pensumItem);
+        }
+
+        const savedPensums = await transactionalEntityManager.save(
+          newPensumArray
+        );
+
+        for await (const savedPensum of savedPensums) {
+          for await (const student of [savedPensum.student]) {
+            const isEnrolled =
+              student.grades.filter((elem) => elem.id === savedPensum.course.id)
+                .length > 0;
+
+            if (!isEnrolled) {
+              const newGrade = GradeRepo.create({
+                pensum: savedPensum,
+                student: student,
+                course: savedPensum.course,
+              });
+              await transactionalEntityManager.save(newGrade);
+            }
+          }
+        }
+      }
+    );
+
+    res.status(201).json({ msg: "Grupo actualizado!" });
+  } catch (error) {
+    res.status(400).json({ error: "error actualizando grupo" });
+    console.log("error updating pensum =>> ", error);
   }
 };
