@@ -11,7 +11,7 @@ router
   .get("/", (_, res) => {
     res.status(200).json({ msg: "student router working!" });
   })
-  .get("/grades-report", reportAllStudentGrades)
+  .post("/grades-report", reportAllStudentGrades)
   .post("/get-with-grades", getStudentWithGrades)
   .post("/get-by-dni", getStudentByDni);
 
