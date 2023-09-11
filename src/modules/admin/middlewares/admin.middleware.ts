@@ -22,6 +22,7 @@ export const adminMiddleware = async (
 
   if (tokenExpired) {
     res.status(401).json({ error: "Acceso no autorizado. Token inválido." });
+    return;
   }
 
   const user = await User.findOne({

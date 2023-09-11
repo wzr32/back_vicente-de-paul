@@ -8,8 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Representant } from "./representant.entity";
-import { Grade } from "./grade.entity";
+import { Grade, Period, Representant } from ".";
 
 @Entity({ name: "students" })
 export class Student extends BaseEntity {
@@ -50,4 +49,11 @@ export class Student extends BaseEntity {
 
   @OneToMany(() => Grade, (grade) => grade.student)
   grades: Grade[];
+
+  @ManyToOne(() => Period, { nullable: true })
+  @JoinColumn({ name: "active_period_id" })
+  activePeriod: Period | null;
+
+  @OneToMany(() => Period, (period) => period.student)
+  periods: Period[];
 }
