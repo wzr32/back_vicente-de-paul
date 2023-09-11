@@ -66,12 +66,21 @@ export const createPensum = async (
               error: `No se encuentra el curso con ID ${item.teacher_id}`,
             });
 
+          const studentActivePeriod = StudentRepo.create({
+            ...checkStudent,
+            activePeriod: checkPeriod!!,
+          });
+
+          const studentWithActivePeriod = await StudentRepo.save(
+            studentActivePeriod
+          );
+
           const newPensum = PensumRepo.create({
-            teacher: checkTeacher!!,
-            student: checkStudent!!,
-            period: checkPeriod!!,
-            course: checkCourse!!,
-            section: checkSection!!,
+            teacher: checkTeacher,
+            student: studentWithActivePeriod,
+            period: checkPeriod,
+            course: checkCourse,
+            section: checkSection,
           });
 
           newPensumArray.push(newPensum);
@@ -224,6 +233,15 @@ export const updatePensum = async (
             return res.status(404).json({
               error: `No se encuentra el estudiante con ID ${item.teacher_id}`,
             });
+
+          const studentActivePeriod = StudentRepo.create({
+            ...checkStudent,
+            activePeriod: checkPeriod!!,
+          });
+
+          const studentWithActivePeriod = await StudentRepo.save(
+            studentActivePeriod
+          );
 
           const pensumItem = PensumRepo.create({
             teacher: checkTeacher!!,
