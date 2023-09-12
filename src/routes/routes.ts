@@ -6,6 +6,7 @@ import { AdminRoutes } from "../modules/admin/routes";
 import { CourseRoutes } from "../modules/courses/routes";
 import { StudentRoutes } from "../modules/student/routes";
 import { adminMiddleware } from "../modules/admin/middlewares";
+import { teacherMiddleware } from "../modules/teachers/middlewares";
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router
   .use("/auth", AuthRoutes)
   .use("/admin", adminMiddleware, AdminRoutes)
   .use("/report", ReportsRoutes)
-  .use("/teacher", TeacherRoutes)
+  .use("/teacher", teacherMiddleware, TeacherRoutes)
   .use("/student", StudentRoutes)
   .use("/course", CourseRoutes);
 

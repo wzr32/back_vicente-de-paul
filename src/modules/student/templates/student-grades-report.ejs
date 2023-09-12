@@ -58,10 +58,15 @@
       style="
         background: #1a182e;
         color: #fff;
-        padding: 20px 0;
+        padding: 20px 0 30px;
         text-align: center;
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        margin-bottom: 40px;
       "
     >
       <!-- ///// -->
@@ -284,16 +289,75 @@
       </svg>
 
       <!-- ///// -->
-      <p>Unidad Edicativa San vicente de Paul</p>
-      <p>J-298187476</p>
-      <p>
-        Calle 69-A Edif. 13A-136 Piso 1 Local Sede Instituto Educacional Sector
-        Tierra Negra Maracaibo, Zulia. ZP 4001
-      </p>
+      <div>
+        <p>Unidad Edicativa San vicente de Paul</p>
+        <p>J-298187476</p>
+        <p>
+          Calle 69-A Edif. 13A-136 Piso 1 Local Sede Instituto Educacional
+          Sector Tierra Negra Maracaibo, Zulia. ZP 4001
+        </p>
+      </div>
     </header>
     <main class="main">
-      <p>Boleta de Notas</p>
-      <p><%= name %> - <%= dni %></p>
+      <p style="font-size: 20px; font-weight: bold; margin-bottom: 30px">
+        BOLETÍN INFORMATIVO DEL RENDIMIENTO ESTUDIANTIL
+      </p>
+
+      <table class="table" style="margin: 0 auto">
+        <tbody>
+          <tr>
+            <td>
+              <div>
+                <p>NOMBRE DEL ALUMNO</p>
+                <p><%= name %></p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>CÉDULA</p>
+                <p><%= dni %></p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>PERÍODO ESCOLAR</p>
+                <p>2023-2024</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table" style="margin: 0 auto 30px">
+        <tbody>
+          <tr>
+            <td>
+              <div>
+                <p>MOMENTO PEDAGÓGICO</p>
+                <p></p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>AÑO Y SECCION</p>
+                <p></p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>NIVEL</p>
+                <p></p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>FECHA DE ENTREGA</p>
+                <p></p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <div style="display: flex; gap: 15px">
         <div style="margin: 0 auto">
@@ -304,48 +368,21 @@
                 <th>Lapso 1</th>
                 <th>Lapso 2</th>
                 <th>Lapso 3</th>
+                <th>def</th>
               </tr>
             </thead>
+            <tbody>
+              <% studentGrades.forEach((item) => {%>
+              <tr>
+                <td><%= item.course %></td>
+                <td><%= item.lap2 %></td>
+                <td><%= item.lap3 %></td>
+                <td><%= (item.lap1 + item.lap2 + item.lap3) / 3 %></td>
+                <td><%= item.lap1 %></td>
+              </tr>
+              <%});%>
+            </tbody>
           </table>
-          <% studentGrades.forEach((item) => {%>
-          <div style="display: flex; column-gap: 20px; width: 60dvw">
-            <!-- ////////////////////////////////////////////////////////////////// -->
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td><%= item.course %></td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- ////////////////////////////////////////////////////////////////// -->
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td><%= item.lap1 %></td>
-                  <td><%= item.lap1 %></td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- ////////////////////////////////////////////////////////////////// -->
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td><%= item.lap2 %></td>
-                  <td><%= item.lap2 %></td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- ////////////////////////////////////////////////////////////////// -->
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td><%= item.lap3 %></td>
-                  <td><%= item.lap3 %></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <%});%>
         </div>
       </div>
     </main>
