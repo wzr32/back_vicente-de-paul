@@ -37,7 +37,6 @@ router
   .post("/create-section", createSection)
   .post("/create-teacher", createTeacher)
   .post("/create-pensum", createPensum)
-  .put("/update-grades", updateGrades)
   .put("/update-period", updatePeriod)
   .put("/update-pensum", updatePensum)
   .delete("/delete-period/:id", deletePeriod);

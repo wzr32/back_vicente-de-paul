@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import { EntityNotFoundError, In } from "typeorm";
 import {
   Course as CourseRepo,
-  Pensum as PensumRepo,
-  Period as PeriodRepo,
   Representant as RepresentantRepo,
   Role as RoleRepo,
   Student as StudentRepo,
@@ -14,8 +12,6 @@ import {
   StudentData,
   RepresentantData,
   TeacherData,
-  PensumData,
-  PeriodData,
   CourseData,
 } from "../../../types";
 import { hashPass } from "../../../utilities/bcrypt.utility";
