@@ -28,6 +28,13 @@ export class Period extends BaseEntity {
   @ManyToOne(() => Course)
   course: Course;
 
+  @Column({
+    type: "enum",
+    enum: ["primary", "secondary"],
+    default: "primary",
+  })
+  educationType: string;
+
   @Column({ type: "timestamptz", nullable: true })
   start_date_lap1: Date;
 
