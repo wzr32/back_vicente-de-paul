@@ -34,7 +34,7 @@ const data = {
 };
 
 app.use("/pdf", (_, res) =>
-  res.render("student-grades-report_primary.ejs", data)
+  res.render("student-grades-report_primary_performance.ejs", data)
 );
 app.use("/api", routes);
 

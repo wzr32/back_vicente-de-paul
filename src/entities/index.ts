@@ -2,6 +2,7 @@ export * from "./course.entity";
 export * from "./grade.entity";
 export * from "./pensum.entity";
 export * from "./period.entity";
+export * from "./primaryElements.entity";
 export * from "./representant.entity";
 export * from "./roles.entity";
 export * from "./section.entity";
