@@ -199,7 +199,10 @@ export const getTeacher = async (
 ): Promise<any> => {
   const { id } = req.body;
   try {
-    const teacher = await TeacherRepo.findOneBy({ id });
+    const teacher = await TeacherRepo.findOne({
+      where: { id },
+      relations: ["courses"],
+    });
 
     if (!teacher) {
       return res.status(404).json({ error: "Profesor no existe" });
