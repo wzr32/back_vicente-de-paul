@@ -66,13 +66,14 @@ export const createPensum = async (
               error: `No se encuentra el curso con ID ${item.teacher_id}`,
             });
 
-          const studentActivePeriod = StudentRepo.create({
+          const studentActivePeriodAndSection = StudentRepo.create({
             ...checkStudent,
             activePeriod: checkPeriod!!,
+            activeSection: checkSection!!,
           });
 
           const studentWithActivePeriod = await StudentRepo.save(
-            studentActivePeriod
+            studentActivePeriodAndSection
           );
 
           const newPensum = PensumRepo.create({
@@ -245,7 +246,7 @@ export const updatePensum = async (
 
           const pensumItem = PensumRepo.create({
             teacher: checkTeacher!!,
-            student: checkStudent!!,
+            student: studentWithActivePeriod!!,
             period: checkPeriod!!,
             course: checkCourse!!,
             section: checkSection!!,

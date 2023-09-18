@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Period } from "./period.entity";
@@ -23,11 +23,11 @@ export class PrimaryEvaluationElement extends BaseEntity {
   @Column()
   grade: string;
 
-  @OneToOne(() => Period)
+  @ManyToOne(() => Period)
   @JoinColumn({ name: "period_id" })
   period: Period;
 
-  @OneToOne(() => Student)
+  @ManyToOne(() => Student)
   @JoinColumn({ name: "student_id" })
   student: Student;
 }

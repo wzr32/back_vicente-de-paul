@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { getTeacherGroups } from "../controllers";
-import { updateGrades } from "../../admin/controllers/grade.controller";
+import {
+  createPrimaryReport,
+  updateGrades,
+} from "../../admin/controllers/grade.controller";
 
 const router = Router();
 
@@ -9,6 +12,7 @@ router
     res.status(200).json({ msg: "teacher router working!" });
   })
   .get("/get-groups", getTeacherGroups)
+  .post("/primary-grades", createPrimaryReport)
   .put("/update-grades", updateGrades);
 
 export default router;
