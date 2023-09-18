@@ -1,15 +1,21 @@
 import { Request, Response } from "express";
-import { Course as CourseRepo, Pensum as PensumRepo } from "../../../entities";
+import { Pensum as PensumRepo } from "../../../entities";
+
+interface CustomRequest extends Request {
+  user?: number;
+}
 
 export const getTeacherGroups = async (
-  req: Request,
+  req: CustomRequest,
   res: Response
 ): Promise<void> => {
+  const id = req.user;
+
   try {
     const pensumsIDS = await PensumRepo.createQueryBuilder("pensum")
       .select("pensum.teacher.id", "id")
       .groupBy("pensum.teacher.id")
-      .where("pensum.teacher.id = :teacherId", { teacherId: 1 })
+      .where("pensum.teacher.id = :teacherId", { teacherId: id })
       .getRawMany();
 
     const allPensums = await PensumRepo.createQueryBuilder("pensum")

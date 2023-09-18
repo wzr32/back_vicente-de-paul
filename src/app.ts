@@ -18,22 +18,22 @@ app.set("flushHeaders", true);
 app.set("PORT", process.env.PORT || 3000);
 app.use(express.json());
 
-// const data = {
-//   name: "ruben padilla",
-//   dni: "21437088",
-//   studentGrades: [
-//     {
-//       gradeId: 1,
-//       course: "matematica",
-//       period: "primer año",
-//       lap1: 10,
-//       lap2: 10,
-//       lap3: 10,
-//     },
-//   ],
-// };
+const data = {
+  name: "ruben padilla",
+  dni: "21437088",
+  studentGrades: [
+    {
+      gradeId: 1,
+      course: "matematica",
+      period: "primer año",
+      lap1: 10,
+      lap2: 10,
+      lap3: 10,
+    },
+  ],
+};
 
-// app.use("/pdf", (_, res) => res.render("student-grades-report.ejs", data));
+app.use("/pdf", (_, res) => res.render("student-grades-report.ejs", data));
 app.use("/api", routes);
 
 export default app;
