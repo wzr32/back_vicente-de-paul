@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 
 interface CustomRequest extends Request {
-  user?: number;
+  teacher?: number;
 }
 
 export const teacherMiddleware = async (
@@ -34,7 +34,7 @@ export const teacherMiddleware = async (
   });
 
   if (Number(user?.role.id) === 2) {
-    req.user = decoded.id;
+    req.teacher = decoded.teacherID;
     next();
   } else {
     res.status(403).send("Usuario no autorizado");

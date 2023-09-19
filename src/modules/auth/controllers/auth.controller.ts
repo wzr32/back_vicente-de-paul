@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { Role as RoleRepo, User as UserRepo } from "../../../entities";
+import {
+  Role as RoleRepo,
+  Teacher as TeacherRepo,
+  User as UserRepo,
+} from "../../../entities";
 import jwt from "jsonwebtoken";
 
 import { SECRET_KEY } from "../../../config";
@@ -16,6 +20,7 @@ export const loginTeacherUser = async (
       where: { email },
       relations: ["role"],
     });
+
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -30,10 +35,20 @@ export const loginTeacherUser = async (
       return;
     }
 
+    const teacher = await TeacherRepo.findOne({
+      where: { email: user.email },
+    });
+
+    if (!teacher) {
+      res.status(404).json({ error: "Profesor no encontrado" });
+      return;
+    }
+
     const userData = jwt.sign(
       {
         id: user?.id,
         role: user?.role.id,
+        teacherID: teacher.id,
       },
       SECRET_KEY,
       {

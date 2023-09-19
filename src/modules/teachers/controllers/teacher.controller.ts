@@ -2,22 +2,16 @@ import { Request, Response } from "express";
 import { Pensum as PensumRepo } from "../../../entities";
 
 interface CustomRequest extends Request {
-  user?: number;
+  teacher?: number;
 }
 
 export const getTeacherGroups = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const id = req.user;
+  const id = req.teacher;
 
   try {
-    const pensumsIDS = await PensumRepo.createQueryBuilder("pensum")
-      .select("pensum.teacher.id", "id")
-      .groupBy("pensum.teacher.id")
-      .where("pensum.teacher.id = :teacherId", { teacherId: id })
-      .getRawMany();
-
     const allPensums = await PensumRepo.createQueryBuilder("pensum")
       .leftJoinAndSelect("pensum.student", "student")
       .leftJoinAndSelect("pensum.teacher", "teacher")
@@ -26,40 +20,31 @@ export const getTeacherGroups = async (
       .leftJoinAndSelect("pensum.period", "period")
       .leftJoinAndSelect("student.grades", "grades")
       .leftJoinAndSelect("grades.course", "gradeCourse")
+      .where("pensum.teacher.id = :teacherId", { teacherId: id })
       .getMany();
 
-    const pensums = [];
+    console.log("allPensumsData =>> ", allPensums);
 
-    for (const data of pensumsIDS) {
-      const mainObj = {
-        ...allPensums.filter((pensum) => pensum.teacher.id === data.id)[0],
-      };
+    const allPensumsData: any[] = [];
 
-      const students: any[] = [];
-      const teachers: any[] = [];
+    for (const pensum of allPensums) {
+      const { student, teacher, ...restOfObj } = pensum;
+      const key = `${id}-${restOfObj.period.id}-${restOfObj.section.id}`;
 
-      allPensums
-        .filter((pensum) => pensum.teacher.id === data.id)
-        .map((pensum) => {
-          if (!students.some((item) => item.id === pensum.student.id)) {
-            const student = pensum.student;
-            students.push(student);
-          }
+      const existingObject = allPensumsData.find((obj) => obj.key === key);
 
-          if (!teachers.some((item) => item.id === pensum.teacher.id)) {
-            const teacher = pensum.teacher;
-            teacher.courses = [pensum.course];
-            teachers.push(teacher);
-          }
+      if (existingObject) {
+        existingObject.students.push(student);
+      } else {
+        allPensumsData.push({
+          key,
+          students: [student],
+          ...restOfObj,
         });
-
-      Object.assign(mainObj, { students, teachers });
-      const { student, teacher, ...restMainObj } = mainObj;
-
-      pensums.push(restMainObj);
+      }
     }
 
-    res.status(200).json(pensums);
+    res.status(200).json(allPensumsData);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo estudiante" });
     console.log("error getting student by dni", error);
