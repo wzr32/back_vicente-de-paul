@@ -88,11 +88,7 @@ export const reportAllStudentPrimaryGrades = async (
       return reportData.find((item: any) => item.description === description);
     };
 
-    const imagePath = path.join(
-      __dirname,
-      "../../../public",
-      "san_vicente.png"
-    );
+    const imagePath = path.join(__dirname, "../assets", "san_vicente.png");
     const image = fs.readFileSync(imagePath);
     const base64Image = Buffer.from(image).toString("base64");
 
@@ -203,11 +199,7 @@ export const reportAllStudentGrades = async (
       lap3: grade.grade_lap3,
     }));
 
-    const imagePath = path.join(
-      __dirname,
-      "../../../public",
-      "san_vicente.png"
-    );
+    const imagePath = path.join(__dirname, "../assets", "san_vicente.png");
     const image = fs.readFileSync(imagePath);
     const base64Image = Buffer.from(image).toString("base64");
 
