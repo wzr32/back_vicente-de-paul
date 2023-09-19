@@ -134,7 +134,9 @@ export const reportAllStudentPrimaryGrades = async (
     );
 
     (async () => {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        executablePath: "/usr/bin/chromium-browser",
+      });
       const [page] = await browser.pages();
       const html = await ejs.renderFile(templatePath, data);
       await page.setContent(html, { waitUntil: "domcontentloaded" });
@@ -226,7 +228,9 @@ export const reportAllStudentGrades = async (
     );
 
     (async () => {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        executablePath: "/usr/bin/chromium-browser",
+      });
       const [page] = await browser.pages();
       const html = await ejs.renderFile(templatePath, data);
       await page.setContent(html, { waitUntil: "domcontentloaded" });
