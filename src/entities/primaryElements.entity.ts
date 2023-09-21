@@ -23,6 +23,12 @@ export class PrimaryEvaluationElement extends BaseEntity {
   @Column()
   grade: string;
 
+  @Column()
+  proyect_name: string;
+
+  @Column()
+  grade_string: string;
+
   @ManyToOne(() => Period)
   @JoinColumn({ name: "period_id" })
   period: Period;

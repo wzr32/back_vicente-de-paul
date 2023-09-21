@@ -11,6 +11,7 @@
 
       p {
         margin-bottom: 5px;
+        margin-top: 5px;
       }
 
       .header {
@@ -29,26 +30,24 @@
       }
 
       .main {
-        /* text-align: center; */
+        background-image: url("data:image/;base64, <%= imageData %>");
         background-repeat: no-repeat;
         background-position: center;
         background-size: 60%;
-        min-height: 70vh;
+        height: 70vh;
         width: 100%;
-        /* text-transform: capitalize; */
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
-        padding-bottom: 2em;
       }
 
       .table {
         border-collapse: collapse;
-        width: 60dvw;
+        width: 80vw;
       }
 
       .table td {
-        border: 2px solid black;
-        padding: 10px;
+        border: 1px solid black;
+        padding: 3px;
         text-align: center;
       }
     </style>
@@ -299,889 +298,1657 @@
       </div>
     </header>
     <main class="main">
-      <p style="font-size: 20px; font-weight: bold; margin-bottom: 30px; text-align: center;">
-        Boletín del Rendimiento Académico
-      </p>
+      <div
+        style="
+          border: 1px solid black;
+          outline: 1px solid black;
+          outline-offset: 3px;
+          width: 80vw;
+          margin: 0 auto 1em;
+        "
+      >
+        <p style="font-size: 20px; font-weight: bold; text-align: center">
+          Boletín del Rendimiento Académico
+        </p>
+      </div>
 
-      <table class="table" style="margin: 0 auto">
+      <table
+        class="table"
+        style="
+          margin: 0 auto;
+          outline: 1px solid black;
+          outline-offset: 3px;
+          margin-bottom: 2em;
+        "
+      >
+        <div
+          style="
+            margin: 0 auto;
+            width: 80vw;
+            padding: 0.2em 1em;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid black;
+            outline: 1px solid black;
+            outline-offset: 3px;
+            margin-bottom: 0.5em;
+          "
+        >
+          <p>Datos del alumno</p>
+        </div>
         <tbody>
           <tr>
             <td>
               <div>
                 <p>NOMBRE DEL ALUMNO</p>
-                <p><%= name %></p>
+                <p>
+                  <%= student.firstName %> <%= student.middleName %> <%=
+                  student.firstLastName %> <%= student.secondLastName %>
+                </p>
               </div>
             </td>
             <td>
               <div>
                 <p>CÉDULA</p>
-                <p><%= dni %></p>
-              </div>
-            </td>
-            <td>
-              <div>
-                <p>PERÍODO ESCOLAR</p>
-                <p>2023-2024</p>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="table" style="margin: 0 auto 30px">
-        <tbody>
-          <tr>
-            <td>
-              <div>
-                <p>MOMENTO PEDAGÓGICO</p>
-                <p></p>
+                <p><%= student.dni %></p>
               </div>
             </td>
             <td>
               <div>
                 <p>AÑO Y SECCION</p>
-                <p></p>
+                <p>
+                  <%= student.activePeriod.name %> - <%=
+                  student.activeSection.name %>
+                </p>
               </div>
             </td>
             <td>
               <div>
                 <p>NIVEL</p>
-                <p></p>
+                <p>
+                  <%= student.activePeriod.educationType === 'primary' ?
+                  ('Educación Primaria') : ('Educación Media Básica') %>
+                </p>
               </div>
             </td>
             <td>
               <div>
-                <p>FECHA DE ENTREGA</p>
-                <p></p>
+                <p>PERÍODO ESCOLAR</p>
+                <p>2023/2024</p>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <table class="table" style="margin: 0 auto 2em">
-        <div style="margin: 0 auto; width: 60dvw; border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black; padding: .5em 1em; box-sizing: border-box; text-align: center;">
+      <table
+        class="table"
+        style="
+          margin: 0 auto;
+          outline: 1px solid black;
+          outline-offset: 3px;
+          margin-bottom: 2em;
+        "
+      >
+        <div
+          style="
+            margin: 0 auto;
+            width: 80vw;
+            padding: 0.2em 1em;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid black;
+            outline: 1px solid black;
+            outline-offset: 3px;
+            margin-bottom: 0.5em;
+          "
+        >
           <p>Datos del representante</p>
         </div>
-        <tbody>
+        <tbody style="width: 80vw">
           <tr>
             <td>
               <div>
-                <p>NOMBRE DEL ALUMNO</p>
-                <p><%= name %></p>
+                <p>NOMBRE</p>
+                <p>
+                  <%= student.representant.firstName %> <%=
+                  student.representant.middleName %> <%=
+                  student.representant.firstLastName %> <%=
+                  student.representant.secondLastName %>
+                </p>
               </div>
             </td>
             <td>
               <div>
                 <p>CÉDULA</p>
-                <p><%= dni %></p>
+                <p><%= student.representant.dni %></p>
               </div>
             </td>
-          </tr>
-          <tr>
             <td>
               <div>
                 <p>Correo</p>
-                <p>mail@mail.com</p>
+                <p><%= student.representant.email %></p>
               </div>
             </td>
             <td>
               <div>
                 <p>Telefono</p>
-                <p>1123123123</p>
+                <p><%= student.representant.phone %></p>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>Area</p>
-          </div>
-          <div style="width: 100%">
+      <div
+        style="
+          border: 1px solid black;
+          outline: 1px solid black;
+          outline-offset: 3px;
+          width: 80vw;
+          margin: 0 auto 1em;
+          text-align: center;
+          font-weight: bold;
+        "
+      >
+        <p style="text-transform: capitalize">
+          INFORME DEL RENDIMIENTO ACADÉMICO DE: <%= student.firstName %> <%=
+          student.middleName %> <%= student.firstLastName %> <%=
+          student.secondLastName %>
+        </p>
+      </div>
+
+      <div
+        style="
+          width: 80vw;
+          margin: 0 auto;
+          border: 1px solid black;
+          outline: 1px solid black;
+          outline-offset: 3px;
+        "
+      >
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div>
+          <div style="display: flex; border-bottom: 1px solid black">
             <div
               style="
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                border: 2px solid black;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
               "
             >
-              <p style="padding: 0 1em; text-align: center; width: 100%">
-                COMPETENCIAS DEL LAPSO
-              </p>
-              <div style="border-left: 1px solid black; border-right: 1px solid black;">
-                <div style="padding: .4em; display: flex; justify-content: center; align-items: center;">
-                  <p>Criterios</p>
+              <p>AREA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  border-left: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; text-align: center; width: 100%">
+                  COMPETENCIAS DEL LAPSO
+                </p>
+                <div style="border-left: 1px solid black">
+                  <div
+                    style="
+                      padding: 0.4em;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      border-bottom: 1px solid black;
+                    "
+                  >
+                    <p>Criterios</p>
+                  </div>
+                  <div style="display: flex">
+                    <span
+                      style="width: 30px; min-height: 20px; text-align: center"
+                      >I</span
+                    >
+                    <span
+                      style="
+                        width: 30px;
+                        min-height: 20px;
+                        text-align: center;
+                        border-left: 1px solid black;
+                        border-right: 1px solid black;
+                      "
+                      >P</span
+                    >
+                    <span
+                      style="width: 30px; min-height: 20px; text-align: center"
+                      >C</span
+                    >
+                  </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+                border-right: 1px solid black;
+                text-align: center;
+              "
+            >
+              <p>LENGUA Y LITERATURA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-bottom: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Participa en conversaciones, discusiones, y exposiciones
+                  orales como hablante y como oyente, con adecuación, respeto y
+                  propieadad.
+                </p>
                 <div style="display: flex">
                   <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black; text-align: center;"
-                  >I</span>
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
                   <span
-                      style="width: 30px; min-height: 20px; border: 1px solid black; text-align: center;"
-                    >P</span>
-                    <span
-                      style="width: 30px; min-height: 20px; border: 1px solid black; text-align: center;"
-                    >C</span>
-                  </div>
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
               </div>
-            
+              <div style="display: flex; justify-content: space-between">
+                <p style="padding: 0 1em; font-size: 12px">
+                  Comprende diferentes textos narrativos escritos, usa
+                  correctamente el diccionario.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Respeta los aspectos formales y elementos normativos de la
+                  lengua escrita.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_3.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_3.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_3.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Cumple con las actividades previstas y mantiene un
+                  compartamiento adecuado.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_4.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_4.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= literature_opt_4.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>MATEMÁTICA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Utiliza los números naturales y los decimales para leer y
+                  escribir cantidades.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Resuelve operaciones Aritmética con números naturales y
+                  decimales.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Construye, relaciona e identifica la circunferencia y sus
+                  elementos.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_3.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_3.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_3.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Reconoce el trabajo individual y en equipo como fuente de
+                  avance personal y social.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_4.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_4.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= math_opt_4.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+                text-align: center;
+              "
+            >
+              <p>Cs. DE LA NATURALEZA Y TECNOLOGÍA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Analiza objetivamente información científica, poniendo en
+                  evidencia su producciones comunicativa.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Asume una actitud que proporciona su desarrollo personal
+                  armónico, destacando la importancia de las leyes, normas,
+                  medidas de prevención e instituciones dedicadas a prevenir y
+                  tratar situaciones problemáticas.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Desarrolla habilidades que le permiten su actuación como ser
+                  humano integral, en armonía con su ambiente socio-cultural y
+                  natural, como condición esencial para mejorar su calidad de
+                  vida.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_3.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_3.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_3.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Asume su responsabilidad y comportamiento como parte
+                  fundamental en la construcción de su aprendizaje.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_4.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_4.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= natTech_opt_4.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>CIENCIAS SOCIALES</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Respeta la participación ciudadana, las normas sociales y las
+                  leyes como elemento fundamentales para la convivencia
+                  democrática.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Propone soluciones a problemas relacionados con el contexto,
+                  basados en la investigación documental.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Asume una actitud reflexiva en defensa de la conservación y
+                  proyección del patrimonio natutal, histórico y socio-cultural
+                  a escala local, regional y nacional.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_3.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_3.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_3.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Asume su responsabilidad u comportamiento como parte
+                  fundamental en la construcción de su aprendizaje.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_4.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_4.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= social_opt_4.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>EDUCACIÓN ESTÉTICA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Aplica los elementos de expresión, técnicas y medio de las
+                  artes en el desarrollo de destrezas y habilidades.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Realiza de manera creativa e independiente todas sus
+                  actividades.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= esthetic_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>EDUCACIÓN FÍSICA</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Participa en actividades grupales e individuales de capacidad
+                  física con sentido de constancia
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Sigue instrucciones y norma de las actividades en las cuales
+                  participa.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= sport_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>EDUCACIÓN EN LA FE</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Expresa interés de reconocer a San Vicente de Paúl como
+                  Patrono del colegio y el amor a la familia Vicentina.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Descubre una actitud reconocimiento en torno al “Don
+                  maravilloso de la vida” en todas sus manifestaciones, de modo
+                  que surja el deseo de valorarla, apreciar la vida de los demás
+                  y cuidar la creación.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Cumple responsablemente con las actividades asignadas dentro y
+                  fuera del salón de clases.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_3.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_3.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= faith_opt_3.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
+        <div style="width: 80vw; margin: 0 auto">
+          <div style="display: flex">
+            <div
+              style="
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                width: 200px;
+              "
+            >
+              <p>INGLÉS</p>
+            </div>
+            <div style="width: 100%">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Lee, escribe y pronuncia vocabulario referente a las partes de
+                  una casa.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_1.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_1.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_1.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  border-top: 1px solid black;
+                "
+              >
+                <p style="padding: 0 1em; font-size: 12px">
+                  Realiza oraciones usando <b>There is/There are</b> para
+                  señalar objetos en singular y plural.
+                </p>
+                <div style="display: flex">
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_2.grade === 'i' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_2.grade === 'p' ? ('X') : ("") %></span
+                  >
+                  <span
+                    style="
+                      width: 30px;
+                      min-height: 20px;
+                      border-left: 1px solid black;
+                      display: grid;
+                      place-items: center;
+                      font-size: 1.3em;
+                      font-weight: bold;
+                    "
+                    ><%= english_opt_2.grade === 'c' ? ('X') : ("") %></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////// -->
       </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>LENGUA Y LITERATURA</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Participa en conversaciones, discusiones, y exposiciones orales
-                como hablante y como oyente, con adecuación, respeto y
-                propieadad.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Comprende diferentes textos narrativos escritos, usa
-                correctamente el diccionario.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Respeta los aspectos formales y elementos normativos de la
-                lengua escrita.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Cumple con las actividades previstas y mantiene un
-                compartamiento adecuado.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>MATEMÁTICA</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Utiliza los números naturales y los decimales para leer y
-                escribir cantidades.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Resuelve operaciones Aritmética con números naturales y
-                decimales.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Construye, relaciona e identifica la circunferencia y sus
-                elementos.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Reconoce el trabajo individual y en equipo como fuente de avance
-                personal y social.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>Cs. DE LA NATURALEZA Y TECNOLOGÍA</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Analiza objetivamente información científica, poniendo en
-                evidencia su producciones comunicativa.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Asume una actitud que proporciona su desarrollo personal
-                armónico, destacando la importancia de las leyes, normas,
-                medidas de prevención e instituciones dedicadas a prevenir y
-                tratar situaciones problemáticas.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Desarrolla habilidades que le permiten su actuación como ser
-                humano integral, en armonía con su ambiente socio-cultural y
-                natural, como condición esencial para mejorar su calidad de
-                vida.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Asume su responsabilidad y comportamiento como parte fundamental
-                en la construcción de su aprendizaje.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>CIENCIAS SOCIALES</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Respeta la participación ciudadana, las normas sociales y las
-                leyes como elemento fundamentales para la convivencia
-                democrática.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Propone soluciones a problemas relacionados con el contexto,
-                basados en la investigación documental.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Asume una actitud reflexiva en defensa de la conservación y
-                proyección del patrimonio natutal, histórico y socio-cultural a
-                escala local, regional y nacional.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Asume su responsabilidad u comportamiento como parte fundamental
-                en la construcción de su aprendizaje.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>EDUCACIÓN ESTÉTICA</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Aplica los elementos de expresión, técnicas y medio de las artes
-                en el desarrollo de destrezas y habilidades.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Realiza de manera creativa e independiente todas sus
-                actividades.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>EDUCACIÓN FÍSICA</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Participa en actividades grupales e individuales de capacidad
-                física con sentido de constancia
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Sigue instrucciones y norma de las actividades en las cuales
-                participa.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>EDUCACIÓN EN LA FE</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Expresa interés de reconocer a San Vicente de Paúl como Patrono
-                del colegio y el amor a la familia Vicentina.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Descubre una actitud reconocimiento en torno al “Don maravilloso
-                de la vida” en todas sus manifestaciones, de modo que surja el
-                deseo de valorarla, apreciar la vida de los demás y cuidar la
-                creación.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Cumple responsablemente con las actividades asignadas dentro y
-                fuera del salón de clases.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
-      <div style="width: 60dvw; margin: 0 auto">
-        <div style="display: flex">
-          <div
-            style="
-              border: 2px solid black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0 1em;
-              width: 200px;
-            "
-          >
-            <p>INGLÉS</p>
-          </div>
-          <div style="width: 100%">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Lee, escribe y pronuncia vocabulario referente a las partes de
-                una casa.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                border: 2px solid black;
-              "
-            >
-              <p style="padding: 0 1em">
-                Realiza oraciones usando <b>There is/There are</b> para señalar objetos
-                en singular y plural.
-              </p>
-              <div style="display: flex">
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-                <span
-                  style="width: 30px; min-height: 20px; border: 1px solid black"
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div style="width: 80vw; margin: 0 auto; margin-top: 1em">
         <p>Criterios: I = Iniciado, P = En Proceso y C = Consolidado</p>
       </div>
-      <!-- ////////////////////////////////////////////////////////////////////////////// -->
     </main>
   </body>
 </html>

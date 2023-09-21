@@ -70,6 +70,8 @@ export const createPrimaryReport = async (
         element: report.element,
         description: report.description,
         grade: report.grade,
+        proyect_name: report.proyect_name,
+        grade_string: report.grade_string,
         student: student as StudentRepo,
         period: period as PeriodRepo,
       });
