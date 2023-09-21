@@ -24,6 +24,15 @@ export class Grade extends BaseEntity {
   @Column({ type: "integer", default: 0 })
   grade_lap3: number;
 
+  @Column({ nullable: true })
+  lap1_comments: string;
+
+  @Column({ nullable: true })
+  lap2_comments: string;
+
+  @Column({ nullable: true })
+  lap3_comments: string;
+
   @ManyToOne(() => Pensum)
   @JoinColumn({ name: "pensum_id" })
   pensum: Pensum;

@@ -4,6 +4,7 @@ import {
   Student as StudentRepo,
 } from "../../../entities";
 import puppeteer, { PDFOptions } from "puppeteer";
+import PDFMerger from "pdf-merger-js";
 import path from "path";
 import ejs from "ejs";
 import * as fs from "fs";
@@ -61,6 +62,8 @@ export const reportAllStudentPrimaryGrades = async (
 ): Promise<void> => {
   const { dni } = req.body;
 
+  let browser: any;
+
   try {
     if (dni === undefined || dni === null) {
       res.status(400).json({ error: "Faltan datos en la peticion" });
@@ -97,6 +100,7 @@ export const reportAllStudentPrimaryGrades = async (
     const base64Image = Buffer.from(image).toString("base64");
 
     const data = {
+      grade_literal: reportData[0].grade_string,
       student,
       literature_opt_1: findObjectByDescription("literature_opt_1"),
       literature_opt_2: findObjectByDescription("literature_opt_2"),
@@ -125,41 +129,58 @@ export const reportAllStudentPrimaryGrades = async (
       english_opt_2: findObjectByDescription("english_opt_2"),
       imageData: base64Image,
     };
-
-    let browser: any;
     const templatePath = path.join(
+      __dirname,
+      "../templates",
+      "student-grades-report_primary.ejs"
+    );
+
+    const templatePathPerformance = path.join(
       __dirname,
       "../templates",
       "student-grades-report_primary_performance.ejs"
     );
 
-    (async () => {
-      browser = await puppeteer.launch({
-        executablePath: "/usr/bin/chromium-browser",
-      });
-      const [page] = await browser.pages();
-      const html = await ejs.renderFile(templatePath, data);
-      await page.setContent(html, { waitUntil: "domcontentloaded" });
+    var merger = new PDFMerger();
 
-      const pdfOptions: PDFOptions = {
-        format: "a4",
-        printBackground: true,
-      };
+    // (async () => {
+    browser = await puppeteer.launch({
+      // executablePath: "/usr/bin/chromium-browser", // TODO: REMOVE COMMENT
+    });
 
-      const pdfBuffer = await page.pdf(pdfOptions);
+    const pdfOptions: PDFOptions = {
+      format: "a4",
+      printBackground: true,
+      landscape: true,
+    };
+    ///////////////////////////////////////////////////////////////
+    const [page1] = await browser.pages();
+    const html1 = await ejs.renderFile(templatePath, data);
+    await page1.setContent(html1, { waitUntil: "domcontentloaded" });
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
-      res.status(200).send(pdfBuffer);
-    })()
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-      })
-      .finally(() => browser?.close());
+    const pdfBuffer1 = await page1.pdf(pdfOptions);
+
+    ///////////////////////////////////////////////////////////////
+    const [page2] = await browser.pages();
+    const html2 = await ejs.renderFile(templatePathPerformance, data);
+    await page1.setContent(html2, { waitUntil: "domcontentloaded" });
+
+    const pdfBuffer2 = await page2.pdf({ landscape: false });
+
+    await merger.add(pdfBuffer1);
+    await merger.add(pdfBuffer2);
+
+    const combinedPDF = await merger.saveAsBuffer();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
+    res.status(200).send(combinedPDF);
+    // })().finally(() => browser?.close());
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo data del estudiante" });
     console.log("error getting student data", error);
+  } finally {
+    browser?.close();
   }
 };
 
@@ -174,12 +195,16 @@ export const reportAllStudentGrades = async (
     return;
   }
 
+  let browser: any;
+
   try {
     const student = await StudentRepo.findOne({
       where: {
         dni,
       },
       relations: [
+        "activePeriod",
+        "activeSection",
         "grades",
         "grades.pensum",
         "grades.pensum.period",
@@ -216,43 +241,41 @@ export const reportAllStudentGrades = async (
     const data = {
       name: student?.firstName + " " + student?.firstLastName,
       dni: student?.dni,
+      periodSection: `${
+        student.activePeriod?.name
+      } "${student.activeSection?.name.toUpperCase()}"`,
+      educationType: student.activePeriod?.educationType,
       studentGrades,
       imageData: base64Image,
     };
 
-    let browser: any;
     const templatePath = path.join(
       __dirname,
       "../templates",
       "student-grades-report.ejs"
     );
 
-    (async () => {
-      browser = await puppeteer.launch({
-        executablePath: "/usr/bin/chromium-browser",
-      });
-      const [page] = await browser.pages();
-      const html = await ejs.renderFile(templatePath, data);
-      await page.setContent(html, { waitUntil: "domcontentloaded" });
+    browser = await puppeteer.launch({
+      // executablePath: "/usr/bin/chromium-browser", // TODO: REMOVE
+    });
+    const [page] = await browser.pages();
+    const html = await ejs.renderFile(templatePath, data);
+    await page.setContent(html, { waitUntil: "domcontentloaded" });
 
-      const pdfOptions: PDFOptions = {
-        format: "a4",
-        printBackground: true,
-      };
+    const pdfOptions: PDFOptions = {
+      format: "a4",
+      printBackground: true,
+    };
 
-      const pdfBuffer = await page.pdf(pdfOptions);
+    const pdfBuffer = await page.pdf(pdfOptions);
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
-      res.status(200).send(pdfBuffer);
-    })()
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-      })
-      .finally(() => browser?.close());
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
+    res.status(200).send(pdfBuffer);
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo data del estudiante" });
     console.log("error getting student data", error);
+  } finally {
+    browser?.close();
   }
 };
