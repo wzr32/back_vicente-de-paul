@@ -23,8 +23,6 @@ export const getTeacherGroups = async (
       .where("pensum.teacher.id = :teacherId", { teacherId: id })
       .getMany();
 
-    console.log("allPensumsData =>> ", allPensums);
-
     const allPensumsData: any[] = [];
 
     for (const pensum of allPensums) {

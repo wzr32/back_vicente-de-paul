@@ -79,8 +79,6 @@ export const updatePeriod = async (
 ): Promise<void> => {
   const requestData: UpdatePeriodWithSectionsRequest = req.body;
   const { period, sections } = requestData;
-  console.log(period);
-  console.log(sections);
   try {
     const checkPeriod = await PeriodRepo.findOne({
       where: { id: period.id },

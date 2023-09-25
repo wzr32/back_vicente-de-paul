@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   PrimaryEvaluationElement as PrimaryEvaluationElementRepo,
   Student as StudentRepo,
+  StudentPerformanceComment as StudentPerformanceCommentRepo,
 } from "../../../entities";
 import puppeteer, { PDFOptions } from "puppeteer";
 import PDFMerger from "pdf-merger-js";
@@ -43,7 +44,7 @@ export const getStudentByDni = async (
   try {
     const student = await StudentRepo.findOne({
       where: { dni },
-      relations: ["activePeriod", "activeSection"],
+      relations: ["activePeriod", "activeSection", "performanceComments"],
     });
     if (!student) {
       res.status(404).json({ error: "Estudiante no encontrado" });
@@ -210,6 +211,7 @@ export const reportAllStudentGrades = async (
         "grades.pensum.period",
         "grades.course",
         "grades.course.teachers",
+        "performanceComments",
       ],
     });
 
@@ -246,6 +248,7 @@ export const reportAllStudentGrades = async (
       } "${student.activeSection?.name.toUpperCase()}"`,
       educationType: student.activePeriod?.educationType,
       studentGrades,
+      performanceComments: student.performanceComments[0],
       imageData: base64Image,
     };
 
@@ -277,5 +280,67 @@ export const reportAllStudentGrades = async (
     console.log("error getting student data", error);
   } finally {
     browser?.close();
+  }
+};
+
+export const createLapsComments = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
+
+  try {
+    const checkStudent = await StudentRepo.findOne({
+      where: { id: student_id },
+    });
+
+    if (!checkStudent) {
+      res.status(404).json({ error: "Estudiante no encontrado" });
+      return;
+    }
+
+    const newPerformanceComments = StudentPerformanceCommentRepo.create({
+      lap1Comment: lap1_comments,
+      lap2Comment: lap2_comments,
+      lap3Comment: lap3_comments,
+      student: checkStudent as any,
+    });
+
+    await StudentPerformanceCommentRepo.insert(newPerformanceComments);
+    res.status(201).json({ msg: "Comentarios agregados" });
+  } catch (error) {
+    res.status(400).json({ error: "Error creando comentarios" });
+    console.log("error creating laps comments", error);
+  }
+};
+
+export const updateLapsComments = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
+
+  try {
+    const checkStudent = await StudentRepo.findOne({
+      where: { id: student_id },
+    });
+
+    if (!checkStudent) {
+      res.status(404).json({ error: "Estudiante no encontrado" });
+      return;
+    }
+
+    const newPerformanceComments = StudentPerformanceCommentRepo.create({
+      lap1Comment: lap1_comments,
+      lap2Comment: lap2_comments,
+      lap3Comment: lap3_comments,
+      student: checkStudent as any,
+    });
+
+    await StudentPerformanceCommentRepo.save(newPerformanceComments);
+    res.status(200).json({ msg: "Comentarios actualizados" });
+  } catch (error) {
+    res.status(400).json({ error: "Error actualizando comentarios" });
+    console.log("error updating laps comments", error);
   }
 };

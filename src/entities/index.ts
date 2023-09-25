@@ -7,5 +7,6 @@ export * from "./representant.entity";
 export * from "./roles.entity";
 export * from "./section.entity";
 export * from "./student.entity";
+export * from "./studentPerformanceComments";
 export * from "./teacher.entity";
 export * from "./user.entity";

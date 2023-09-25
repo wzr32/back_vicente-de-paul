@@ -20,8 +20,10 @@ import {
   getAllSections,
 } from "../controllers/section.controller";
 import {
+  createLapsComments,
   reportAllStudentGrades,
   reportAllStudentPrimaryGrades,
+  updateLapsComments,
 } from "../../student/controllers";
 
 const router = Router();
@@ -40,10 +42,12 @@ router
   .post("/create-section", createSection)
   .post("/create-teacher", createTeacher)
   .post("/create-pensum", createPensum)
+  .post("/create-laps-comments", createLapsComments)
   .post("/grades-report", reportAllStudentGrades)
   .post("/primary-grades-report", reportAllStudentPrimaryGrades)
   .put("/update-period", updatePeriod)
   .put("/update-pensum", updatePensum)
+  .put("/update-laps-comments", updateLapsComments)
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;

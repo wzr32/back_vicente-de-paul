@@ -9,6 +9,7 @@ import {
   Role,
   Section,
   Student,
+  StudentPerformanceComment,
   Teacher,
   User,
 } from "../entities";
@@ -33,6 +34,7 @@ export const AppDataSource = new DataSource({
     Role,
     Section,
     Student,
+    StudentPerformanceComment,
     Teacher,
     User,
   ],

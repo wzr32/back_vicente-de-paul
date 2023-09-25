@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Grade, Period, Representant, Section } from ".";
+import { StudentPerformanceComment } from "./studentPerformanceComments";
 
 @Entity({ name: "students" })
 export class Student extends BaseEntity {
@@ -60,4 +61,7 @@ export class Student extends BaseEntity {
 
   @OneToMany(() => Period, (period) => period.student)
   periods: Period[];
+
+  @OneToMany(() => StudentPerformanceComment, (comment) => comment.student)
+  performanceComments: StudentPerformanceComment[];
 }

@@ -412,14 +412,14 @@
               <div>
                 <p>NIVEL</p>
                 <p>
-                  <b> Educación Media General </b>
+                  <b>Educación Media General </b>
                 </p>
               </div>
             </td>
             <td>
               <div>
-                <p><b>FECHA DE ENTREGA</b></p>
-                <p></p>
+                <p>FECHA DE ENTREGA</p>
+                <p><b><%= new Date().toLocaleDateString('en-GB') %></b></p>
               </div>
             </td>
           </tr>
@@ -458,10 +458,10 @@
             <% studentGrades.forEach((item) => {%>
             <tr>
               <td style="font-weight: bold"><%= item.course %></td>
+              <td><%= item.lap1 %></td>
               <td><%= item.lap2 %></td>
               <td><%= item.lap3 %></td>
               <td><%= (item.lap1 + item.lap2 + item.lap3) / 3 %></td>
-              <td><%= item.lap1 %></td>
             </tr>
             <%});%>
           </tbody>
@@ -494,7 +494,6 @@
                 text-align: center;
                 box-sizing: border-box;
                 max-width: 130px;
-                width: 100%;
                 padding: 1em;
                 border-right: 1px solid black;
                 border-bottom: 1px solid black;
@@ -507,13 +506,10 @@
                 box-sizing: border-box;
                 padding: 1em;
                 border-bottom: 1px solid black;
+                width: 420px;
               "
             >
-              <p>
-                ¡Felicitaciones! Por tu compromiso, responsabilidad y respeto
-                hacia sus deberes escolares. Continúa demostrando tus
-                potencialidades.
-              </p>
+              <p style="width: 100%"><%= performanceComments.lap1Comment %></p>
             </div>
           </div>
           <div style="display: flex; text-align: left">
@@ -535,18 +531,10 @@
                 box-sizing: border-box;
                 padding: 1em;
                 border-bottom: 1px solid black;
+                width: 420px;
               "
             >
-              <p>
-                ¡Felicitaciones! Ha cumplido sus deberes escolares con
-                compromiso, responsabilidad y respeto. Continúe desarrollando
-                sus potencialidades.
-              </p>
-              <p>
-                No asiste puntualmente a las actividades del plantel antes del
-                timbre de entrada a las 6:50 a. m. Solicitó Cuatro (4) pases en
-                el 2do. Momento pedagógico.
-              </p>
+              <p><%= performanceComments.lap2Comment %></p>
             </div>
           </div>
           <div style="display: flex; text-align: left">
@@ -563,9 +551,7 @@
               <p>3er. Momento Pedagógico</p>
             </div>
             <div style="box-sizing: border-box; padding: 1em">
-              <p>
-                !Felicitaciones¡ por su compromiso con sus deberes escolares.
-              </p>
+              <p><%= performanceComments.lap3Comment %></p>
             </div>
           </div>
         </div>
