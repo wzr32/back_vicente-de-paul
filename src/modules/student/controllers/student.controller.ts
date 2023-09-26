@@ -3,6 +3,7 @@ import {
   PrimaryEvaluationElement as PrimaryEvaluationElementRepo,
   Student as StudentRepo,
   StudentPerformanceComment as StudentPerformanceCommentRepo,
+  Pensum as PensumRepo,
 } from "../../../entities";
 import puppeteer, { PDFOptions } from "puppeteer";
 import PDFMerger from "pdf-merger-js";
@@ -83,10 +84,31 @@ export const reportAllStudentPrimaryGrades = async (
       return;
     }
 
+    const checkPensum = await PensumRepo.find({
+      where: {
+        student: { id: student.id },
+        period: { id: student.activePeriod?.id },
+        section: { id: student.activeSection?.id },
+      },
+      relations: ["teacher"],
+    });
+
+    if (!checkPensum) {
+      res.status(404).json({ error: "Pensum no encontrado" });
+      return;
+    }
+
     const reportData = await PrimaryEvaluationElementRepo.find({
       where: { student: { id: student.id } },
       relations: ["student", "period"],
     });
+
+    if (reportData.length < 1) {
+      res
+        .status(400)
+        .json({ error: "Estudiante aun no posee calificaciones asignadas" });
+      return;
+    }
 
     const findObjectByDescription = (description: string) => {
       return reportData.find((item: any) => item.description === description);
@@ -103,6 +125,7 @@ export const reportAllStudentPrimaryGrades = async (
     const data = {
       grade_literal: reportData[0].grade_string,
       student,
+      pensum: checkPensum[0],
       literature_opt_1: findObjectByDescription("literature_opt_1"),
       literature_opt_2: findObjectByDescription("literature_opt_2"),
       literature_opt_3: findObjectByDescription("literature_opt_3"),
@@ -176,7 +199,6 @@ export const reportAllStudentPrimaryGrades = async (
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
     res.status(200).send(combinedPDF);
-    // })().finally(() => browser?.close());
   } catch (error) {
     res.status(400).json({ error: "Error obteniendo data del estudiante" });
     console.log("error getting student data", error);

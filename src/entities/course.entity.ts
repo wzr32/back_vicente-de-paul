@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Teacher } from "./teacher.entity";
-import { Pensum } from "./pensum.entity";
 
 @Entity({ name: "courses" })
 export class Course extends BaseEntity {
