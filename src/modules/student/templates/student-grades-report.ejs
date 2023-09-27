@@ -396,12 +396,12 @@
       >
         <tbody>
           <tr>
-            <td>
+            <!-- <td>
               <div>
                 <p>MOMENTO PEDAGÓGICO</p>
                 <p><b></b></p>
               </div>
-            </td>
+            </td> -->
             <td>
               <div>
                 <p>AÑO Y SECCION</p>
@@ -509,7 +509,10 @@
                 width: 420px;
               "
             >
-              <p style="width: 100%"><%= performanceComments.lap1Comment %></p>
+              <p style="width: 100%">
+                <%= performanceComments !== undefined ?
+                performanceComments.lap1Comment : '' %>
+              </p>
             </div>
           </div>
           <div style="display: flex; text-align: left">
@@ -534,7 +537,10 @@
                 width: 420px;
               "
             >
-              <p><%= performanceComments.lap2Comment %></p>
+              <p>
+                <%= performanceComments !== undefined ?
+                performanceComments.lap2Comment : '' %>
+              </p>
             </div>
           </div>
           <div style="display: flex; text-align: left">
@@ -551,7 +557,10 @@
               <p>3er. Momento Pedagógico</p>
             </div>
             <div style="box-sizing: border-box; padding: 1em">
-              <p><%= performanceComments.lap3Comment %></p>
+              <p>
+                <%= performanceComments !== undefined ?
+                performanceComments.lap3Comment : '' %>
+              </p>
             </div>
           </div>
         </div>
@@ -581,7 +590,7 @@
         </div>
         <div style="box-sizing: border-box; padding: 1em">
           <p style="font-weight: bold">
-            Amabilidad: Tratar a todo el mundo con la debida consideración y
+            Amabilidad: Tratar a todo el mundo con la debida consideración y
             cortesía.
           </p>
         </div>
@@ -601,7 +610,12 @@
         </div>
         <div style="display: flex; flex-direction: column; text-align: center">
           <p>________________________________</p>
-          <p>DOUGLAS TORRES</p>
+          <p style="text-transform: uppercase">
+            <%= guideTeacher.firstName.trim() %> <%=
+            guideTeacher.middleName.charAt(0).trim() %> <%=
+            guideTeacher.firstLastName.trim() %> <%=
+            guideTeacher.secondLastName.charAt(0).trim() %>
+          </p>
           <p>Docente Guia</p>
         </div>
       </div>

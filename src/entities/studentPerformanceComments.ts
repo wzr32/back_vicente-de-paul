@@ -4,8 +4,12 @@ import {
   Column,
   ManyToOne,
   BaseEntity,
+  CreateDateColumn,
+  JoinColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Student } from "./student.entity";
+import { Teacher } from "./teacher.entity";
 
 @Entity({ name: "student_performance_comments" })
 export class StudentPerformanceComment extends BaseEntity {
@@ -23,4 +27,14 @@ export class StudentPerformanceComment extends BaseEntity {
 
   @ManyToOne(() => Student, (student) => student.performanceComments)
   student: Student;
+
+  @ManyToOne(() => Teacher) // Agrega la relación con el profesor
+  @JoinColumn({ name: "teacher_id" }) // Puedes personalizar el nombre de la columna en la que se almacena el ID del profesor
+  teacher: Teacher;
+
+  @CreateDateColumn({ name: "created_at", nullable: false })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: "updated_at", nullable: false })
+  updatedAt: Date;
 }

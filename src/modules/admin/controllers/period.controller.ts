@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import {
+  GroupGuide as GroupGuideRepo,
   Period as PeriodRepo,
   Section as SectionRepo,
+  Teacher as TeacherRepo,
 } from "../../../entities";
 
 interface CreatePeriodWithSectionsRequest {
@@ -12,6 +14,7 @@ interface CreatePeriodWithSectionsRequest {
   sections: {
     name: string;
   }[];
+  teacher: number;
 }
 
 interface UpdatePeriodWithSectionsRequest {
@@ -44,7 +47,7 @@ export const createPeriod = async (
   res: Response
 ): Promise<any> => {
   const requestData: CreatePeriodWithSectionsRequest = req.body;
-  const { period, sections } = requestData;
+  const { period, sections, teacher } = requestData;
 
   try {
     const checkPeriod = await PeriodRepo.findOneBy({ name: period.name });
@@ -64,7 +67,18 @@ export const createPeriod = async (
       return newSection;
     });
 
-    await SectionRepo.insert(newSections);
+    const createdSection = await SectionRepo.insert(newSections);
+
+    const checkTeacher = await TeacherRepo.findOne({ where: { id: teacher } });
+
+    if (checkTeacher) {
+      const guideTeacher = GroupGuideRepo.create({
+        teacher: checkTeacher,
+        section: createdSection.generatedMaps[0],
+      });
+
+      await GroupGuideRepo.save(guideTeacher);
+    }
 
     res.status(201).json({ msg: "Periodo y secciones creadas" });
   } catch (error) {

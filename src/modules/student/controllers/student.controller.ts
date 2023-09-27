@@ -4,12 +4,18 @@ import {
   Student as StudentRepo,
   StudentPerformanceComment as StudentPerformanceCommentRepo,
   Pensum as PensumRepo,
+  GroupGuide,
+  Teacher as TeacherRepo,
 } from "../../../entities";
 import puppeteer, { PDFOptions } from "puppeteer";
 import PDFMerger from "pdf-merger-js";
 import path from "path";
 import ejs from "ejs";
 import * as fs from "fs";
+
+interface CustomRequest extends Request {
+  teacher?: number;
+}
 
 export const getStudentWithGrades = async (
   req: Request,
@@ -242,6 +248,11 @@ export const reportAllStudentGrades = async (
       return;
     }
 
+    const guideTeacher = await GroupGuide.findOne({
+      where: { section: { id: student.activeSection?.id } },
+      relations: ["teacher"],
+    });
+
     const studentGrades = student?.grades.map((grade) => ({
       gradeId: grade.id,
       course: grade.course.name,
@@ -271,6 +282,7 @@ export const reportAllStudentGrades = async (
       educationType: student.activePeriod?.educationType,
       studentGrades,
       performanceComments: student.performanceComments[0],
+      guideTeacher: guideTeacher?.teacher,
       imageData: base64Image,
     };
 
@@ -281,7 +293,7 @@ export const reportAllStudentGrades = async (
     );
 
     browser = await puppeteer.launch({
-      executablePath: "/usr/bin/chromium-browser",
+      // executablePath: "/usr/bin/chromium-browser",
     });
     const [page] = await browser.pages();
     const html = await ejs.renderFile(templatePath, data);
@@ -306,10 +318,11 @@ export const reportAllStudentGrades = async (
 };
 
 export const createLapsComments = async (
-  req: Request,
+  req: CustomRequest,
   res: Response
 ): Promise<void> => {
   const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
+  const teacher_id = req.teacher;
 
   try {
     const checkStudent = await StudentRepo.findOne({
@@ -321,11 +334,21 @@ export const createLapsComments = async (
       return;
     }
 
+    const checkTeacher = await TeacherRepo.findOne({
+      where: { id: teacher_id },
+    });
+
+    if (!checkTeacher) {
+      res.status(404).json({ error: "Profesor no encontrado" });
+      return;
+    }
+
     const newPerformanceComments = StudentPerformanceCommentRepo.create({
       lap1Comment: lap1_comments,
       lap2Comment: lap2_comments,
       lap3Comment: lap3_comments,
-      student: checkStudent as any,
+      student: checkStudent,
+      teacher: checkTeacher,
     });
 
     await StudentPerformanceCommentRepo.insert(newPerformanceComments);
@@ -337,10 +360,12 @@ export const createLapsComments = async (
 };
 
 export const updateLapsComments = async (
-  req: Request,
+  req: CustomRequest,
   res: Response
 ): Promise<void> => {
   const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
+
+  const teacher_id = req.teacher;
 
   try {
     const checkStudent = await StudentRepo.findOne({
@@ -352,11 +377,21 @@ export const updateLapsComments = async (
       return;
     }
 
+    const checkTeacher = await TeacherRepo.findOne({
+      where: { id: teacher_id },
+    });
+
+    if (!checkTeacher) {
+      res.status(404).json({ error: "Profesor no encontrado" });
+      return;
+    }
+
     const newPerformanceComments = StudentPerformanceCommentRepo.create({
       lap1Comment: lap1_comments,
       lap2Comment: lap2_comments,
       lap3Comment: lap3_comments,
-      student: checkStudent as any,
+      student: checkStudent,
+      teacher: checkTeacher,
     });
 
     await StudentPerformanceCommentRepo.save(newPerformanceComments);

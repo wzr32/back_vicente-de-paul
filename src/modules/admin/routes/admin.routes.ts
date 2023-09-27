@@ -25,6 +25,7 @@ import {
   reportAllStudentPrimaryGrades,
   updateLapsComments,
 } from "../../student/controllers";
+import { CreatePeriodTime } from "../controllers/periodTime.controller";
 
 const router = Router();
 
@@ -42,12 +43,14 @@ router
   .post("/create-section", createSection)
   .post("/create-teacher", createTeacher)
   .post("/create-pensum", createPensum)
-  .post("/create-laps-comments", createLapsComments)
+  .post("/create-time-period", CreatePeriodTime)
   .post("/grades-report", reportAllStudentGrades)
   .post("/primary-grades-report", reportAllStudentPrimaryGrades)
+  .post("/create-laps-comments", createLapsComments)
+  .put("/update-laps-comments", updateLapsComments)
   .put("/update-period", updatePeriod)
   .put("/update-pensum", updatePensum)
-  .put("/update-laps-comments", updateLapsComments)
+
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;
