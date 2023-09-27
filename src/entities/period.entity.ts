@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Teacher, Student, Course, Section } from ".";
+import { Teacher, Student, Course, Section, PeriodTime } from ".";
 
 @Entity({ name: "periods" })
 export class Period extends BaseEntity {
@@ -34,6 +34,9 @@ export class Period extends BaseEntity {
     default: "primary",
   })
   educationType: string;
+
+  @ManyToOne(() => PeriodTime, (periodTime) => periodTime.periods)
+  periodTime: PeriodTime;
 
   @Column({ type: "timestamptz", nullable: true })
   start_date_lap1: Date;
