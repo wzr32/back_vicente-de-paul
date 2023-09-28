@@ -448,9 +448,18 @@
                 </td>
                 <td>
                   <div>
-                    <p>GRADO Y SECCIÓN</p>
+                    <p>CÉDULA</p>
                     <p>
                       <b> <%= student.dni %> </b>
+                    </p>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <p>GRADO Y SECCIÓN</p>
+                    <p style="text-transform: capitalize">
+                      <b> <%= student.activePeriod.name %> - </b>
+                      <b> <%= student.activeSection.name %> </b>
                     </p>
                   </div>
                 </td>
@@ -460,23 +469,27 @@
                   <div>
                     <p>MOMENTO PEDAGÓGICO</p>
                     <p style="text-transform: capitalize">
-                      <b> <%= student.activePeriod.name %> - </b>
-                      <b> <%= student.activeSection.name %> </b>
+                      <b> <%= lapMoment %></b>
                     </p>
                   </div>
                 </td>
                 <td>
                   <div>
                     <p>DOCENTE</p>
-                    <p>
-                      <b> Educación Primaria </b>
+                    <p style="text-transform: capitalize">
+                      <b>
+                        <%= pensum.teacher.firstName.trim() %> <%=
+                        pensum.teacher.middleName.charAt(0).trim() %> <%=
+                        pensum.teacher.firstLastName.trim() %> <%=
+                        pensum.teacher.secondLastName.charAt().trim() %>
+                      </b>
                     </p>
                   </div>
                 </td>
                 <td>
                   <div>
                     <p>PERÍODO ESCOLAR</p>
-                    <p>2023/2024</p>
+                    <p><b>2023/2024</b></p>
                   </div>
                 </td>
               </tr>

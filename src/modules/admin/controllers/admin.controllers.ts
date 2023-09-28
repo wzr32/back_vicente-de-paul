@@ -181,6 +181,8 @@ export const getAllStudents = async (
   try {
     const students = await StudentRepo.createQueryBuilder("student")
       .leftJoinAndSelect("student.grades", "grades")
+      .leftJoinAndSelect("student.activePeriod", "activePeriod")
+      .leftJoinAndSelect("student.activeSection", "activeSection")
       .leftJoinAndSelect("grades.pensum", "pensum")
       .leftJoinAndSelect("pensum.period", "period")
       .leftJoinAndSelect("pensum.section", "section")
