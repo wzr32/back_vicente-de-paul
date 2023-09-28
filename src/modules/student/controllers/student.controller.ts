@@ -68,7 +68,7 @@ export const reportAllStudentPrimaryGrades = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { dni } = req.body;
+  const { dni, lap } = req.body;
 
   let browser: any;
 
@@ -157,6 +157,7 @@ export const reportAllStudentPrimaryGrades = async (
       faith_opt_3: findObjectByDescription("faith_opt_3"),
       english_opt_1: findObjectByDescription("english_opt_1"),
       english_opt_2: findObjectByDescription("english_opt_2"),
+      lapMoment: lap,
       imageData: base64Image,
     };
     const templatePath = path.join(
@@ -175,11 +176,11 @@ export const reportAllStudentPrimaryGrades = async (
 
     // (async () => {
     browser = await puppeteer.launch({
-      executablePath: "/usr/bin/chromium-browser",
+      // executablePath: "/usr/bin/chromium-browser",
     });
 
     const pdfOptions: PDFOptions = {
-      format: "a4",
+      format: "legal",
       printBackground: true,
       landscape: true,
     };
@@ -195,7 +196,7 @@ export const reportAllStudentPrimaryGrades = async (
     const html2 = await ejs.renderFile(templatePathPerformance, data);
     await page1.setContent(html2, { waitUntil: "domcontentloaded" });
 
-    const pdfBuffer2 = await page2.pdf({ landscape: false });
+    const pdfBuffer2 = await page2.pdf(pdfOptions);
 
     await merger.add(pdfBuffer1);
     await merger.add(pdfBuffer2);
@@ -217,7 +218,7 @@ export const reportAllStudentGrades = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { dni } = req.body;
+  const { dni, lap } = req.body;
 
   if (dni === undefined || dni === null) {
     res.status(400).json({ error: "Faltan datos en la peticion" });
@@ -283,6 +284,7 @@ export const reportAllStudentGrades = async (
       studentGrades,
       performanceComments: student.performanceComments[0],
       guideTeacher: guideTeacher?.teacher,
+      lapMoment: lap,
       imageData: base64Image,
     };
 
