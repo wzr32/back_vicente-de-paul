@@ -6,6 +6,7 @@ import {
   Pensum as PensumRepo,
   GroupGuide,
   Teacher as TeacherRepo,
+  PeriodTime as PeriodTimeRepo,
 } from "../../../entities";
 import puppeteer, { PDFOptions } from "puppeteer";
 import PDFMerger from "pdf-merger-js";
@@ -116,6 +117,12 @@ export const reportAllStudentPrimaryGrades = async (
       return;
     }
 
+    const periodTime = await PeriodTimeRepo.find({
+      order: {
+        start_date: "DESC",
+      },
+    });
+
     const findObjectByDescription = (description: string) => {
       return reportData.find((item: any) => item.description === description);
     };
@@ -158,6 +165,7 @@ export const reportAllStudentPrimaryGrades = async (
       english_opt_1: findObjectByDescription("english_opt_1"),
       english_opt_2: findObjectByDescription("english_opt_2"),
       lapMoment: lap,
+      periodTime: periodTime[0].name,
       imageData: base64Image,
     };
     const templatePath = path.join(
@@ -254,6 +262,12 @@ export const reportAllStudentGrades = async (
       relations: ["teacher"],
     });
 
+    const periodTime = await PeriodTimeRepo.find({
+      order: {
+        start_date: "DESC",
+      },
+    });
+
     const studentGrades = student?.grades.map((grade) => ({
       gradeId: grade.id,
       course: grade.course.name,
@@ -285,6 +299,7 @@ export const reportAllStudentGrades = async (
       performanceComments: student.performanceComments[0],
       guideTeacher: guideTeacher?.teacher,
       lapMoment: lap,
+      periodTime: periodTime[0].name,
       imageData: base64Image,
     };
 

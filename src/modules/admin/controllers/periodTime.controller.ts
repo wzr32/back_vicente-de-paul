@@ -30,3 +30,21 @@ export const CreatePeriodTime = async (
     console.log("error creating period time =>> ", err);
   }
 };
+
+export const getNewestPeriodTime = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const periodTime = await PeriodTimeRepo.find({
+      order: {
+        start_date: "DESC",
+      },
+    });
+
+    res.status(200).json(periodTime[0]);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniedno el periodo" });
+    console.log("error creating period time =>> ", error);
+  }
+};

@@ -25,7 +25,10 @@ import {
   reportAllStudentPrimaryGrades,
   updateLapsComments,
 } from "../../student/controllers";
-import { CreatePeriodTime } from "../controllers/periodTime.controller";
+import {
+  CreatePeriodTime,
+  getNewestPeriodTime,
+} from "../controllers/periodTime.controller";
 
 const router = Router();
 
@@ -38,6 +41,7 @@ router
   .get("/get-sections", getAllSections)
   .get("/get-periods", getAllPeriods)
   .get("/get-pensums", getAllPensums)
+  .get("/get-time-period", getNewestPeriodTime)
   .post("/create-student", createStudent)
   .post("/create-period", createPeriod)
   .post("/create-section", createSection)
