@@ -165,7 +165,7 @@ export const reportAllStudentPrimaryGrades = async (
       english_opt_1: findObjectByDescription("english_opt_1"),
       english_opt_2: findObjectByDescription("english_opt_2"),
       lapMoment: lap,
-      periodTime: periodTime[0].name,
+      periodTime: periodTime[0] ? periodTime[0].name : "",
       imageData: base64Image,
     };
     const templatePath = path.join(
@@ -299,7 +299,7 @@ export const reportAllStudentGrades = async (
       performanceComments: student.performanceComments[0],
       guideTeacher: guideTeacher?.teacher,
       lapMoment: lap,
-      periodTime: periodTime[0].name,
+      periodTime: periodTime[0] ? periodTime[0].name : "",
       imageData: base64Image,
     };
 
