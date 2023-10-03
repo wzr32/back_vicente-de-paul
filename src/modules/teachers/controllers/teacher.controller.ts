@@ -92,3 +92,14 @@ export const getTeacherGroups = async (
     console.log("error getting student by dni", error);
   }
 };
+
+export const getUpdateStudentsGrades = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo estudiante" });
+    console.log("error getting student by dni", error);
+  }
+};
