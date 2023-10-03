@@ -3,6 +3,8 @@ import {
   createStudent,
   createTeacher,
   getAllStudents,
+  getAllPrimaryStudents,
+  getAllSecondaryStudents,
   getAllTeachers,
   getStudent,
   getTeacher,
@@ -31,6 +33,8 @@ const router = Router();
 
 router
   .get("/get-student/:id", getStudent)
+  .get("/get-primary-students", getAllPrimaryStudents) //
+  .get("/get-secondary-students", getAllSecondaryStudents) //
   .get("/get-students", getAllStudents)
   .get("/get-teacher/:id", getTeacher)
   .get("/get-teachers", getAllTeachers)
@@ -50,7 +54,6 @@ router
   .put("/update-laps-comments", updateLapsComments)
   .put("/update-period", updatePeriod)
   .put("/update-pensum", updatePensum)
-
   .delete("/delete-period/:id", deletePeriod);
 
 export default router;

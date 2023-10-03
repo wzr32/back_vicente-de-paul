@@ -257,10 +257,10 @@ export const reportAllStudentGrades = async (
       return;
     }
 
-    const guideTeacher = await GroupGuide.findOne({
-      where: { section: { id: student.activeSection?.id } },
-      relations: ["teacher"],
-    });
+    // const guideTeacher = await GroupGuide.findOne({
+    //   where: { section: { id: student.activeSection?.id } },
+    //   relations: ["teacher"],
+    // });
 
     const periodTime = await PeriodTimeRepo.find({
       order: {
@@ -297,7 +297,7 @@ export const reportAllStudentGrades = async (
       educationType: student.activePeriod?.educationType,
       studentGrades,
       performanceComments: student.performanceComments[0],
-      guideTeacher: guideTeacher?.teacher,
+      // guideTeacher: guideTeacher?.teacher,
       lapMoment: lap,
       periodTime: periodTime[0] ? periodTime[0].name : "",
       imageData: base64Image,

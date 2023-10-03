@@ -47,7 +47,7 @@ export const createPeriod = async (
   res: Response
 ): Promise<any> => {
   const requestData: CreatePeriodWithSectionsRequest = req.body;
-  const { period, sections, teacher } = requestData;
+  const { period, sections } = requestData;
 
   try {
     const checkPeriod = await PeriodRepo.findOneBy({ name: period.name });
@@ -67,18 +67,18 @@ export const createPeriod = async (
       return newSection;
     });
 
-    const createdSection = await SectionRepo.insert(newSections);
+    await SectionRepo.insert(newSections);
 
-    const checkTeacher = await TeacherRepo.findOne({ where: { id: teacher } });
+    // await TeacherRepo.findOne({ where: { id: teacher } });
 
-    if (checkTeacher) {
-      const guideTeacher = GroupGuideRepo.create({
-        teacher: checkTeacher,
-        section: createdSection.generatedMaps[0],
-      });
+    // if (checkTeacher) {
+    //   const guideTeacher = GroupGuideRepo.create({
+    //     teacher: checkTeacher,
+    //     section: createdSection.generatedMaps[0],
+    //   });
 
-      await GroupGuideRepo.save(guideTeacher);
-    }
+    //   await GroupGuideRepo.save(guideTeacher);
+    // }
 
     res.status(201).json({ msg: "Periodo y secciones creadas" });
   } catch (error) {

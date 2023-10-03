@@ -195,6 +195,54 @@ export const getAllStudents = async (
   }
 };
 
+export const getAllPrimaryStudents = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const students = await StudentRepo.createQueryBuilder("student")
+      .leftJoinAndSelect("student.grades", "grades")
+      .leftJoinAndSelect("student.activePeriod", "activePeriod")
+      .leftJoinAndSelect("student.activeSection", "activeSection")
+      .leftJoinAndSelect("grades.pensum", "pensum")
+      .leftJoinAndSelect("pensum.period", "period")
+      .leftJoinAndSelect("pensum.section", "section")
+      .where("period.educationType = :educationType", {
+        educationType: "primary",
+      })
+      .getMany();
+
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo estudiantes" });
+    console.log("error getting students =>> ", error);
+  }
+};
+
+export const getAllSecondaryStudents = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const students = await StudentRepo.createQueryBuilder("student")
+      .leftJoinAndSelect("student.grades", "grades")
+      .leftJoinAndSelect("student.activePeriod", "activePeriod")
+      .leftJoinAndSelect("student.activeSection", "activeSection")
+      .leftJoinAndSelect("grades.pensum", "pensum")
+      .leftJoinAndSelect("pensum.period", "period")
+      .leftJoinAndSelect("pensum.section", "section")
+      .where("period.educationType = :educationType", {
+        educationType: "secondary",
+      })
+      .getMany();
+
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(400).json({ error: "Error obteniendo estudiantes" });
+    console.log("error getting students =>> ", error);
+  }
+};
+
 export const getTeacher = async (
   req: Request<{}, {}, { id: number }>,
   res: Response
