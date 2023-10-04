@@ -184,7 +184,7 @@ export const reportAllStudentPrimaryGrades = async (
 
     // (async () => {
     browser = await puppeteer.launch({
-      // executablePath: "/usr/bin/chromium-browser",
+      executablePath: "/usr/bin/chromium-browser",
     });
 
     const pdfOptions: PDFOptions = {
@@ -310,7 +310,7 @@ export const reportAllStudentGrades = async (
     );
 
     browser = await puppeteer.launch({
-      // executablePath: "/usr/bin/chromium-browser",
+      executablePath: "/usr/bin/chromium-browser",
     });
     const [page] = await browser.pages();
     const html = await ejs.renderFile(templatePath, data);
