@@ -137,6 +137,7 @@ export const reportAllStudentPrimaryGrades = async (
 
     const data = {
       grade_literal: reportData[0].grade_string,
+      comments: reportData[0].comments,
       student,
       pensum: checkPensum[0],
       literature_opt_1: findObjectByDescription("literature_opt_1"),
@@ -184,7 +185,7 @@ export const reportAllStudentPrimaryGrades = async (
 
     // (async () => {
     browser = await puppeteer.launch({
-      executablePath: "/usr/bin/chromium-browser",
+      // executablePath: "/usr/bin/chromium-browser",
     });
 
     const pdfOptions: PDFOptions = {
