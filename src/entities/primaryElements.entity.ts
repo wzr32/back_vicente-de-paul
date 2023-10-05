@@ -20,6 +20,9 @@ export class PrimaryEvaluationElement extends BaseEntity {
   @Column({ type: "text" })
   description: string;
 
+  @Column({ type: "text" })
+  comments: string;
+
   @Column()
   grade: string;
 

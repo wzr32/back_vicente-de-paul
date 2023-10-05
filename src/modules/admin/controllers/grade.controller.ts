@@ -69,6 +69,7 @@ export const createPrimaryReport = async (
       const reportElement = PrimaryEvaluationElementRepo.create({
         element: report.element,
         description: report.description,
+        comments: report.comments,
         grade: report.grade,
         proyect_name: report.proyect_name,
         grade_string: report.grade_string,
