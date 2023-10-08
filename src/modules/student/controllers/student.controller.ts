@@ -4,7 +4,6 @@ import {
   Student as StudentRepo,
   StudentPerformanceComment as StudentPerformanceCommentRepo,
   Pensum as PensumRepo,
-  GroupGuide,
   Teacher as TeacherRepo,
   PeriodTime as PeriodTimeRepo,
 } from "../../../entities";
@@ -269,6 +268,11 @@ export const reportAllStudentGrades = async (
       },
     });
 
+    if (periodTime.length < 1) {
+      res.status(400).json({ error: "No hay periodo creado" });
+      return;
+    }
+
     const studentGrades = student?.grades.map((grade) => ({
       gradeId: grade.id,
       course: grade.course.name,
@@ -340,7 +344,6 @@ export const createLapsComments = async (
   res: Response
 ): Promise<void> => {
   const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
-  const teacher_id = req.teacher;
 
   try {
     const checkStudent = await StudentRepo.findOne({
@@ -352,24 +355,14 @@ export const createLapsComments = async (
       return;
     }
 
-    const checkTeacher = await TeacherRepo.findOne({
-      where: { id: teacher_id },
-    });
-
-    if (!checkTeacher) {
-      res.status(404).json({ error: "Profesor no encontrado" });
-      return;
-    }
-
     const newPerformanceComments = StudentPerformanceCommentRepo.create({
       lap1Comment: lap1_comments,
       lap2Comment: lap2_comments,
       lap3Comment: lap3_comments,
       student: checkStudent,
-      teacher: checkTeacher,
     });
 
-    await StudentPerformanceCommentRepo.insert(newPerformanceComments);
+    await StudentPerformanceCommentRepo.save(newPerformanceComments);
     res.status(201).json({ msg: "Comentarios agregados" });
   } catch (error) {
     res.status(400).json({ error: "Error creando comentarios" });
@@ -383,8 +376,6 @@ export const updateLapsComments = async (
 ): Promise<void> => {
   const { student_id, lap1_comments, lap2_comments, lap3_comments } = req.body;
 
-  const teacher_id = req.teacher;
-
   try {
     const checkStudent = await StudentRepo.findOne({
       where: { id: student_id },
@@ -395,25 +386,64 @@ export const updateLapsComments = async (
       return;
     }
 
-    const checkTeacher = await TeacherRepo.findOne({
-      where: { id: teacher_id },
+    const checkComment = await StudentPerformanceCommentRepo.findOne({
+      where: { student: { id: checkStudent.id } },
     });
 
-    if (!checkTeacher) {
-      res.status(404).json({ error: "Profesor no encontrado" });
+    if (!checkComment) {
+      // Si no existe un registro, crea uno nuevo
+      const newPerformanceComments = new StudentPerformanceCommentRepo();
+      newPerformanceComments.lap1Comment = lap1_comments;
+      newPerformanceComments.lap2Comment = lap2_comments;
+      newPerformanceComments.lap3Comment = lap3_comments;
+      newPerformanceComments.student = checkStudent;
+
+      await StudentPerformanceCommentRepo.save(newPerformanceComments);
+    } else {
+      // Si existe un registro, actualiza los comentarios
+      checkComment.lap1Comment = lap1_comments;
+      checkComment.lap2Comment = lap2_comments;
+      checkComment.lap3Comment = lap3_comments;
+
+      await StudentPerformanceCommentRepo.save(checkComment);
+    }
+
+    res.status(200).json({ msg: "Comentarios actualizados" });
+  } catch (error) {
+    res.status(400).json({ error: "Error actualizando comentarios" });
+    console.log("error updating laps comments", error);
+  }
+};
+
+export const reportPrimaryDataByStudent = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  try {
+    if (id === undefined || id === null) {
+      res.status(400).json({ error: "Faltan datos en la peticion" });
       return;
     }
 
-    const newPerformanceComments = StudentPerformanceCommentRepo.create({
-      lap1Comment: lap1_comments,
-      lap2Comment: lap2_comments,
-      lap3Comment: lap3_comments,
-      student: checkStudent,
-      teacher: checkTeacher,
+    const student = await StudentRepo.findOne({
+      where: {
+        id: Number(id),
+      },
+      relations: ["representant", "activePeriod", "activeSection"],
     });
 
-    await StudentPerformanceCommentRepo.save(newPerformanceComments);
-    res.status(200).json({ msg: "Comentarios actualizados" });
+    if (!student) {
+      res.status(404).json({ error: "Estudiante no encontrado" });
+      return;
+    }
+
+    const reportData = await PrimaryEvaluationElementRepo.find({
+      where: { student: { id: student.id } },
+      relations: ["student", "period"],
+    });
+
+    res.status(200).json(reportData);
   } catch (error) {
     res.status(400).json({ error: "Error actualizando comentarios" });
     console.log("error updating laps comments", error);

@@ -23,7 +23,20 @@ export const updateGrades = async (
 
     for (const student of students) {
       for (const grade of student.grades) {
-        updatedGrades.push(grade);
+        let existingGrade = await GradeRepo.findOne({
+          where: { student: { id: student.id } },
+        });
+
+        if (!existingGrade) {
+          existingGrade = new GradeRepo();
+        }
+
+        existingGrade.grade_lap1 = grade.grade_lap1;
+        existingGrade.grade_lap2 = grade.grade_lap2;
+        existingGrade.grade_lap3 = grade.grade_lap3;
+        existingGrade.course = grade.course;
+
+        updatedGrades.push(existingGrade);
       }
     }
 
@@ -62,6 +75,12 @@ export const createPrimaryReport = async (
     if (!period) {
       res.status(400).json({ error: "Periodo no encontrado" });
     }
+
+    await PrimaryEvaluationElementRepo.createQueryBuilder()
+      .delete()
+      .from(PrimaryEvaluationElementRepo)
+      .where("student = :student", { student: student?.id })
+      .execute();
 
     const primaryReport: any[] = [];
 

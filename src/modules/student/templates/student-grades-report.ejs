@@ -461,7 +461,10 @@
               <td><%= item.lap1 %></td>
               <td><%= item.lap2 %></td>
               <td><%= item.lap3 %></td>
-              <td><%= (item.lap1 + item.lap2 + item.lap3) / 3 %></td>
+              <td>
+                <%= item.lap1 > 0 && item.lap2 > 0 && item.lap3 > 0 ? (item.lap1
+                + item.lap2 + item.lap3) / 3 : '0' %>
+              </td>
             </tr>
             <%});%>
           </tbody>
