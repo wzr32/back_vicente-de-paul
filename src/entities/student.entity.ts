@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Representant } from "./representant.entity";
+import { Grade, Period, Representant, Section } from ".";
+import { StudentPerformanceComment } from "./studentPerformanceComments";
 
 @Entity({ name: "students" })
 export class Student extends BaseEntity {
@@ -45,4 +47,21 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Representant)
   @JoinColumn({ name: "representant_id" })
   representant: Representant;
+
+  @OneToMany(() => Grade, (grade) => grade.student)
+  grades: Grade[];
+
+  @ManyToOne(() => Period, { nullable: true })
+  @JoinColumn({ name: "active_period_id" })
+  activePeriod: Period | null;
+
+  @ManyToOne(() => Section, { eager: true })
+  @JoinColumn({ name: "active_section_id" })
+  activeSection: Section | null;
+
+  @OneToMany(() => Period, (period) => period.student)
+  periods: Period[];
+
+  @OneToMany(() => StudentPerformanceComment, (comment) => comment.student)
+  performanceComments: StudentPerformanceComment[];
 }

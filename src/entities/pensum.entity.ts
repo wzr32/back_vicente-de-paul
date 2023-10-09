@@ -6,20 +6,15 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Course, Period, Student, Teacher } from ".";
+import { Course, Grade, Period, Section, Student, Teacher } from ".";
 
 @Entity({ name: "pensum" })
 export class Pensum extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Teacher)
-  @JoinColumn({ name: "teacher_id" })
-  teacher: Teacher;
-
-  @ManyToOne(() => Student)
-  @JoinColumn({ name: "student_id" })
-  student: Student;
+  @Column({ nullable: true })
+  name: string;
 
   @ManyToOne(() => Period)
   @JoinColumn({ name: "period_id" })
@@ -29,12 +24,19 @@ export class Pensum extends BaseEntity {
   @JoinColumn({ name: "course_id" })
   course: Course;
 
-  @Column({ type: "integer" })
-  grade_lap1: number;
+  @ManyToOne(() => Section)
+  @JoinColumn({ name: "section_id" })
+  section: Section;
 
-  @Column({ type: "integer" })
-  grade_lap2: number;
+  @ManyToOne(() => Grade)
+  @JoinColumn({ name: "grade_id" })
+  grade: Grade;
 
-  @Column({ type: "integer" })
-  grade_lap3: number;
+  @ManyToOne(() => Teacher)
+  @JoinColumn({ name: "teacher_id" })
+  teacher: Teacher;
+
+  @ManyToOne(() => Student)
+  @JoinColumn({ name: "student_id" })
+  student: Student;
 }

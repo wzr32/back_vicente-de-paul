@@ -1,7 +1,8 @@
 import {
+  BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -9,18 +10,21 @@ import {
 import { Period } from "./period.entity";
 
 @Entity()
-@Index(["period", "name"], { unique: true })
-export class Section {
+export class Section extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @ManyToOne(() => Period)
+  @ManyToOne(() => Period, (period) => period.sections)
   @JoinColumn({ name: "period_id" })
   period: Period;
 
-  @Column({ type: "timestamptz" })
-  created_at: Date;
+  @CreateDateColumn({
+    name: "created_at",
+    default: () => "timezone('America/Caracas', now())",
+    nullable: false,
+  })
+  createdAt: Date;
 }

@@ -3,8 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Course } from "./course.entity";
+import { Pensum } from "./pensum.entity";
 
 @Entity({ name: "teachers" })
 export class Teacher extends BaseEntity {
@@ -29,10 +33,17 @@ export class Teacher extends BaseEntity {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Column({ unique: true, nullable: false })
+  phone: string;
+
   @CreateDateColumn({
     name: "created_at",
     default: () => "timezone('America/Caracas', now())",
     nullable: false,
   })
   createdAt: Date;
+
+  @ManyToMany(() => Course, (course) => course.teachers)
+  @JoinTable()
+  courses: Course[];
 }

@@ -1,12 +1,17 @@
 import { DataSource } from "typeorm";
 import {
   Course,
+  Grade,
+  GroupGuide,
   Pensum,
   Period,
+  PeriodTime,
+  PrimaryEvaluationElement,
   Representant,
   Role,
   Section,
   Student,
+  StudentPerformanceComment,
   Teacher,
   User,
 } from "../entities";
@@ -23,22 +28,27 @@ export const AppDataSource = new DataSource({
   logging: false,
   entities: [
     Course,
+    Grade,
+    GroupGuide,
     Pensum,
     Period,
+    PeriodTime,
+    PrimaryEvaluationElement,
     Representant,
     Role,
     Section,
     Student,
+    StudentPerformanceComment,
     Teacher,
     User,
   ],
   subscribers: [],
   migrations: ["./src/migrations"],
   migrationsTableName: "migration_table",
-  ssl: true, // Habilita la conexión SSL/TLS
-  extra: {
-    ssl: {
-      rejectUnauthorized: false, // Esto puede ser necesario en algunos casos, aunque no es recomendado para producción
-    },
-  },
+  // ssl: true, // Habilita la conexión SSL/TLS
+  // extra: {
+  //   ssl: {
+  //     rejectUnauthorized: false, // Esto puede ser necesario en algunos casos, aunque no es recomendado para producción
+  //   },
+  // },
 });

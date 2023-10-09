@@ -1,29 +1,39 @@
 import { NextFunction, Response, Request } from "express";
 import { User } from "../../../entities";
 import * as jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../../../config";
 
-export async function checkIsAdmin(
+export const adminMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
-) {
-  // Obtener JWT de headers
-  const token = req.headers.authorization;
+): Promise<void> => {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(403).send("No token provided");
+    res
+      .status(403)
+      .json({ error: "Acceso no autorizado. Token no proporcionado." });
+    return;
   }
 
-  // Verificar firma y decodificar JWT
-  const decoded = jwt.verify(token, "secretkey");
+  const decoded: any = jwt.verify(token, SECRET_KEY);
+  const tokenExpired = decoded.exp <= Math.floor(Date.now() / 1000);
 
-  // Obtener usuario del JWT
-  const user = await User.findOne({ where: {} });
+  if (tokenExpired) {
+    res.status(401).json({ error: "Acceso no autorizado. Token inválido." });
+    return;
+  }
 
-  // Verificar rol
-  // if (Number(user?.role.id) === 1) {
-  //   return res.status(403).send("Unauthorized");
-  // }
+  const user = await User.findOne({
+    where: { id: decoded.id },
+    relations: ["role"],
+  });
 
-  next();
-}
+  if (Number(user?.role.id) === 1) {
+    next();
+  } else {
+    res.status(403).send("Usuario no autorizado");
+    return;
+  }
+};

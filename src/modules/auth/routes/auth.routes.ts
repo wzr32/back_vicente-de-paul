@@ -1,13 +1,20 @@
 import { Request, Response, Router } from "express";
-import { loginUser, createUser, updateUser, deleteUser } from "../controllers";
+import {
+  createUser,
+  updateUser,
+  deleteUser,
+  loginTeacherUser,
+  loginAdminUser,
+} from "../controllers";
 
 const router = Router();
 
 router
   .get("/", (req: Request, res: Response) => res.json({ msg: "on auth" }))
-  .post("/login", loginUser)
+  .post("/login-admin", loginAdminUser)
+  .post("/login-teacher", loginTeacherUser)
   .post("/create-user", createUser)
-  .post("/update-user", updateUser)
-  .post("/delete-user", deleteUser);
+  .put("/update-user/:id", updateUser)
+  .delete("/delete-user/:id", deleteUser);
 
 export default router;
