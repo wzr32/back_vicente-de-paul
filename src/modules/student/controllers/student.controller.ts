@@ -185,6 +185,12 @@ export const reportAllStudentPrimaryGrades = async (
     // (async () => {
     browser = await puppeteer.launch({
       executablePath: "/usr/bin/chromium-browser",
+      args: [
+        "--disable-gpu",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--no-zygote",
+      ],
     });
 
     const pdfOptions: PDFOptions = {
@@ -316,6 +322,12 @@ export const reportAllStudentGrades = async (
 
     browser = await puppeteer.launch({
       executablePath: "/usr/bin/chromium-browser",
+      args: [
+        "--disable-gpu",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--no-zygote",
+      ],
     });
     const [page] = await browser.pages();
     const html = await ejs.renderFile(templatePath, data);
